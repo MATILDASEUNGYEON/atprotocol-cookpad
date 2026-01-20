@@ -3,9 +3,15 @@ import cookieParser from 'cookie-parser'
 import path from 'path'
 import { authRouter } from './routes/auth'
 import { meRouter } from './routes/me'
+import cors from 'cors'
 
 export const app = express()
-
+app.use(
+  cors({
+    origin: 'http://localhost:5173',
+    credentials: true,
+  }),
+)
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 app.use(cookieParser())

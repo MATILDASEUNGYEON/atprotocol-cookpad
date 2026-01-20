@@ -186,17 +186,6 @@
         >
       </div>
       
-      <!-- <div class="form-group">
-        <label for="password">비밀번호</label>
-        <input 
-          type="password" 
-          id="password" 
-          placeholder="비밀번호를 입력하세요" 
-          required
-          autocomplete="current-password"
-        >
-      </div> -->
-      
       <button type="submit" id="loginBtn">로그인</button>
     </form>
     
@@ -217,7 +206,6 @@
       e.preventDefault()
       
       const identifier = document.getElementById('identifier').value
-      // const password = document.getElementById('password').value
       
       // 버튼 비활성화 및 로딩 표시
       loginBtn.disabled = true
@@ -230,7 +218,7 @@
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ identifier /*, password */ }),
+          body: JSON.stringify({ identifier }),
         })
         
         const data = await response.json()
