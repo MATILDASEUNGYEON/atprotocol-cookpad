@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OAuth 인증 완료</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: white;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+      width: 100%;
+      max-width: 500px;
+      text-align: center;
+    }
+
+    h1 {
+      color: #333;
+      margin-bottom: 20px;
+      font-size: 28px;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 50px;
+      height: 50px;
+      border: 4px solid rgba(102, 126, 234, 0.2);
+      border-radius: 50%;
+      border-top-color: #667eea;
+      animation: spin 0.8s linear infinite;
+      margin: 30px 0;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .result {
+      padding: 20px;
+      border-radius: 8px;
+      margin-top: 20px;
+      animation: slideIn 0.3s ease-out;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .result.success {
+      background: #d4edda;
+      border: 1px solid #c3e6cb;
+      color: #155724;
+    }
+
+    .result.error {
+      background: #f8d7da;
+      border: 1px solid #f5c6cb;
+      color: #721c24;
+    }
+
+    .result h3 {
+      margin-bottom: 10px;
+      font-size: 18px;
+    }
+
+    .result pre {
+      background: rgba(0, 0, 0, 0.05);
+      padding: 15px;
+      border-radius: 4px;
+      overflow-x: auto;
+      font-size: 13px;
+      line-height: 1.5;
+      text-align: left;
+      margin-top: 15px;
+    }
+
+    .back-button {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 12px 30px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 600;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .back-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔄 OAuth 인증 처리 중</h1>
+    <div class="spinner"></div>
+    <p>잠시만 기다려주세요...</p>
+    <div id="result"></div>
+  </div>
+
+  <script>
+    // 현재 URL의 query parameters 처리는 서버에서 수행
+    // 여기서는 결과만 표시
+    const resultDiv = document.getElementById('result')
+
+    // URL에서 인증 결과 확인
+    const urlParams = new URLSearchParams(window.location.search)
+    const success = urlParams.get('success')
+    const did = urlParams.get('did')
+    const handle = urlParams.get('handle')
+    const error = urlParams.get('error')
+
+    if (success === 'true') {
+      resultDiv.className = 'result success'
+      resultDiv.innerHTML = `
+        <h3>✅ 로그인 성공!</h3>
+        <pre>${JSON.stringify({ did, handle }, null, 2)}</pre>
+        <a href="/" class="back-button">메인으로 돌아가기</a>
+      `
+    } else if (error) {
+      resultDiv.className = 'result error'
+      resultDiv.innerHTML = `
+        <h3>❌ 로그인 실패</h3>
+        <p>${decodeURIComponent(error)}</p>
+        <a href="/" class="back-button">다시 시도하기</a>
+      `
+    }
+  </script>
+</body>
+</html>
