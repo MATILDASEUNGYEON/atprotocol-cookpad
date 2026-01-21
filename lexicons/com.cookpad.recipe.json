@@ -1,0 +1,98 @@
+{
+  "lexicon": 1,
+  "id": "com.cookpad.recipe",
+  "defs": {
+    "main": {
+      "type": "record",
+      "description": "Recipe record schema for Cookpad service",
+      "key": "tid",
+      "record": {
+        "type": "object",
+        "required": ["title", "ingredients", "steps", "createdAt"],
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Recipe title",
+            "maxLength": 300
+          },
+          "description": {
+            "type": "string",
+            "description": "Recipe description",
+            "maxLength": 3000
+          },
+          "ingredients": {
+            "type": "array",
+            "description": "List of ingredients",
+            "items": {
+              "type": "string",
+              "maxLength": 200
+            }
+          },
+          "steps": {
+            "type": "array",
+            "description": "Cooking steps",
+            "items": {
+              "type": "ref",
+              "ref": "#step"
+            }
+          },
+          "cookTimeMinutes": {
+            "type": "integer",
+            "description": "Estimated cooking time in minutes",
+            "minimum": 0,
+            "maximum": 10000
+          },
+          "servings": {
+            "type": "integer",
+            "description": "Number of servings",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "coverImage": {
+            "type": "blob",
+            "description": "Recipe cover image",
+            "accept": ["image/png", "image/jpeg", "image/webp"],
+            "maxSize": 1000000
+          },
+          "tags": {
+            "type": "array",
+            "description": "Recipe tags",
+            "items": {
+              "type": "string",
+              "maxLength": 50
+            },
+            "maxLength": 20
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "datetime",
+            "description": "Recipe creation timestamp"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "datetime",
+            "description": "Recipe last update timestamp"
+          }
+        }
+      }
+    },
+    "step": {
+      "type": "object",
+      "description": "A single cooking step",
+      "required": ["text"],
+      "properties": {
+        "text": {
+          "type": "string",
+          "description": "Step instruction text",
+          "maxLength": 1000
+        },
+        "image": {
+          "type": "blob",
+          "description": "Step image (optional)",
+          "accept": ["image/png", "image/jpeg", "image/webp"],
+          "maxSize": 1000000
+        }
+      }
+    }
+  }
+}

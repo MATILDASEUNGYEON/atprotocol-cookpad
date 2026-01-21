@@ -16,12 +16,23 @@ migrateToLatest(db)
     process.exit(1)
   })
 
-const server = app.listen(PORT, () => {
-  console.log('='.repeat(50))
-  console.log(`✅ 서버 시작: ${SERVER_ORIGIN}`)
-  console.log('='.repeat(50))
-})
+// 테스트 환경에서는 서버를 시작하지 않음
+let server: any
 
-server.on('error', (error) => {
-  console.error('❌ 서버 에러:', error)
-})
+if (process.env.NODE_ENV !== 'test') {
+  server = app.listen(PORT, () => {
+    console.log('='.repeat(50))
+    console.log(`✅ 서버 시작: ${SERVER_ORIGIN}`)
+    console.log('='.repeat(50))
+  })
+
+  if (server) {
+    server.on('error', (error: Error) => {
+      console.error('❌ 서버 에러:', error)
+    })
+  }
+} else {
+  console.log('🧪 테스트 모드: 서버 시작 건너뜀')
+}
+
+export { server }

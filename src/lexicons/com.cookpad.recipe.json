@@ -1,0 +1,77 @@
+{
+  "lexicon": 1,
+  "id": "com.cookpad.recipe",
+  "defs": {
+    "main": {
+      "type": "record",
+      "description": "User-created cooking recipe",
+      "record": {
+        "type": "object",
+        "required": [
+          "title",
+          "description",
+          "ingredients",
+          "steps",
+          "cookTimeMinutes",
+          "createdAt"
+        ],
+        "properties": {
+          "title": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "coverImage": {
+            "type": "blob",
+            "description": "Main image of the completed dish",
+            "accept": ["image/*"],
+            "maxSize": 5242880
+          },
+          "ingredients": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 100
+            },
+            "minLength": 1
+          },
+          "steps": {
+            "type": "array",
+            "minLength": 1,
+            "items": {
+              "type": "object",
+              "required": ["text"],
+              "properties": {
+                "text": {
+                  "type": "string",
+                  "maxLength": 1000
+                },
+                "image": {
+                  "type": "blob",
+                  "accept": ["image/*"],
+                  "maxSize": 5242880
+                }
+              }
+            }
+          },
+          "cookTimeMinutes": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 1440
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "datetime"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "datetime"
+          }
+        }
+      }
+    }
+  }
+}

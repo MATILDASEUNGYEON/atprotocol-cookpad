@@ -1,27 +1,36 @@
+// src/lib/agent.ts
 import { AtpAgent } from '@atproto/api'
 import { oauthClient } from '../auth/oauthClient'
 import type { OAuthSession } from '@atproto/oauth-client-node'
 
-export async function getAgentByDid(did: string): Promise<{ agent: AtpAgent; did: string; session: OAuthSession } | null> {
+export async function getAgentByDid(
+  did: string,
+): Promise<{ agent: AtpAgent; did: string; session: OAuthSession } | null> {
   const oauthSession = await oauthClient.restore(did)
   if (!oauthSession) return null
 
-  // OAuth 세션의 PDS URL 사용
+  // ✅ OAuth issuer = PDS URL
   const pdsUrl = oauthSession.serverMetadata.issuer
-  
-  // OAuth 세션의 fetchHandler를 표준 fetch 형식으로 래핑
-  const authenticatedFetch = async (input: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
-    const url = input instanceof Request ? input.url : input.toString()
+
+  if (!pdsUrl) {
+    throw new Error('PDS URL not found in OAuth session metadata')
+  }
+
+  // ✅ OAuth 세션에 바인딩된 fetch 그대로 사용
+  const authenticatedFetch = (
+    input: RequestInfo | URL,
+    init?: RequestInit,
+  ) => {
+    const url =
+      input instanceof Request ? input.url : input.toString()
     return oauthSession.fetchHandler(url, init)
   }
-  
-  // AtpAgent 생성 - 인증된 fetch 사용 (PDS 전용)
+
   const agent = new AtpAgent({
     service: pdsUrl,
     fetch: authenticatedFetch,
   })
-  
-  // OAuth 세션의 DID와 세션 정보 반환
+
   return {
     agent,
     did: oauthSession.sub, // DID
