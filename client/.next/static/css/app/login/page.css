@@ -1,0 +1,138 @@
+/*!******************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[12].use[3]!./app/styles/login.css ***!
+  \******************************************************************************************************************************************************************************************************************************************************************/
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  padding: 20px;
+}
+
+.login-card {
+  background: #f5f1e8;
+  border-radius: 16px;
+  padding: 48px 40px;
+  max-width: 420px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  text-align: center;
+}
+
+.login-card .logo {
+  margin-bottom: 24px;
+  border-radius: 12px;
+}
+
+.login-card .title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #2d2d2d;
+  margin-bottom: 32px;
+  text-align: center;
+}
+
+.login-card form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.login-card .label {
+  text-align: left;
+  font-weight: 600;
+  font-size: 14px;
+  color: #4a4a4a;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.login-card .input {
+  width: 100%;
+  padding: 14px 16px;
+  border: 2px solid #d4d4d4;
+  border-radius: 8px;
+  font-size: 15px;
+  background: #2d2d2d;
+  color: #ffffff;
+  transition: border-color 0.3s, background-color 0.3s;
+  box-sizing: border-box;
+}
+
+.login-card .input:focus {
+  outline: none;
+  border-color: #d4a259;
+  background: #3a3a3a;
+}
+
+.login-card .input::placeholder {
+  color: #888888;
+}
+
+.login-card .login-button {
+  width: 100%;
+  padding: 14px 24px;
+  background: linear-gradient(135deg, #d4a259 0%, #b8893e 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  margin-top: 12px;
+}
+
+.login-card .login-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(212, 162, 89, 0.4);
+}
+
+.login-card .login-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.login-card .error {
+  margin-top: 16px;
+  padding: 12px;
+  background: #f8d7da;
+  border: 2px solid #dc3545;
+  border-radius: 8px;
+  color: #721c24;
+  font-size: 14px;
+  animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.login-card .signup {
+  margin-top: 24px;
+  font-size: 14px;
+  color: #666666;
+  text-align: center;
+}
+
+.login-card .signup a {
+  color: #4a90e2;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+
+.login-card .signup a:hover {
+  color: #357abd;
+  text-decoration: underline;
+}
+
