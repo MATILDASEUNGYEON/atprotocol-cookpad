@@ -6,17 +6,17 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  background: #f8f9fa;
   padding: 20px;
 }
 
 .login-card {
-  background: #f5f1e8;
-  border-radius: 16px;
+  background: white;
+  border-radius: 20px;
   padding: 48px 40px;
-  max-width: 420px;
+  max-width: 620px;
   width: 100%;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
   text-align: center;
 }
 
@@ -28,7 +28,7 @@
 .login-card .title {
   font-size: 28px;
   font-weight: 700;
-  color: #2d2d2d;
+  color: #333;
   margin-bottom: 32px;
   text-align: center;
 }
@@ -43,7 +43,7 @@
   text-align: left;
   font-weight: 600;
   font-size: 14px;
-  color: #4a4a4a;
+  color: #555;
   margin-bottom: 8px;
   display: block;
 }
@@ -51,42 +51,43 @@
 .login-card .input {
   width: 100%;
   padding: 14px 16px;
-  border: 2px solid #d4d4d4;
+  border: 2px solid #e0e0e0;
   border-radius: 8px;
   font-size: 15px;
-  background: #2d2d2d;
-  color: #ffffff;
-  transition: border-color 0.3s, background-color 0.3s;
+  background: white;
+  color: #333;
+  transition: border-color 0.3s, box-shadow 0.3s;
   box-sizing: border-box;
 }
 
 .login-card .input:focus {
   outline: none;
-  border-color: #d4a259;
-  background: #3a3a3a;
+  border-color: #ff6b35;
+  box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
 }
 
 .login-card .input::placeholder {
-  color: #888888;
+  color: #999;
 }
 
 .login-card .login-button {
   width: 100%;
   padding: 14px 24px;
-  background: linear-gradient(135deg, #d4a259 0%, #b8893e 100%);
+  background: #ff6b35;
   color: white;
   border: none;
   border-radius: 8px;
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: background 0.3s, transform 0.2s, box-shadow 0.2s;
   margin-top: 12px;
 }
 
 .login-card .login-button:hover:not(:disabled) {
+  background: #ff5722;
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(212, 162, 89, 0.4);
+  box-shadow: 0 6px 20px rgba(255, 107, 53, 0.3);
 }
 
 .login-card .login-button:disabled {
@@ -125,14 +126,14 @@
 }
 
 .login-card .signup a {
-  color: #4a90e2;
+  color: #ff6b35;
   text-decoration: none;
   font-weight: 600;
   transition: color 0.2s;
 }
 
 .login-card .signup a:hover {
-  color: #357abd;
+  color: #ff5722;
   text-decoration: underline;
 }
 

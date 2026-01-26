@@ -6,7 +6,6 @@ export const db = createDb('./data.db')
 
 const PORT = parseInt(process.env.PORT ?? '3000')
 
-// DB 마이그레이션 실행
 migrateToLatest(db)
   .then(() => {
     console.log('✅ DB 마이그레이션 완료')
@@ -16,7 +15,6 @@ migrateToLatest(db)
     process.exit(1)
   })
 
-// 테스트 환경에서는 서버를 시작하지 않음
 let server: any
 
 if (process.env.NODE_ENV !== 'test') {

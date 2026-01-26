@@ -24,19 +24,15 @@ authRouter.get('/oauth/callback', async (req, res) => {
 
     const oauth = await oauthClient.callback(params)
 
-    res.cookie('did', oauth.session.did, {
-      httpOnly: true,
-    })
-
     const publicAgent = new AtpAgent({ service: 'https://public.api.bsky.app' })
     const profile = await publicAgent.getProfile({ actor: oauth.session.did })
 
-    const callbackUrl = new URL('/callback', WEB_ORIGIN)
-    callbackUrl.searchParams.set('success', 'true')
-    callbackUrl.searchParams.set('did', oauth.session.did)
-    callbackUrl.searchParams.set('handle', profile.data.handle)
+    const homeUrl = new URL('/', WEB_ORIGIN)
+    homeUrl.searchParams.set('login', 'success')
+    homeUrl.searchParams.set('did', oauth.session.did)
+    homeUrl.searchParams.set('handle', profile.data.handle)
     
-    res.redirect(callbackUrl.toString())
+    res.redirect(homeUrl.toString())
   } catch (error: any) {
     console.error('OAuth 콜백 에러:', error)
 

@@ -16,8 +16,11 @@ export const oauthClient = new NodeOAuthClient({
 
     scope: OAUTH.SCOPE,
     token_endpoint_auth_method: 'none',
+    application_type: 'web',
   },
 
   stateStore,
   sessionStore,
+  
+  handleResolver: 'https://bsky.social',
 })

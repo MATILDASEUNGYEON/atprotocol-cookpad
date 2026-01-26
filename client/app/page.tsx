@@ -1,8 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, Suspense } from 'react'
 import Image from 'next/image'
 import logo from '../assets/main-logo.png'
+import Header from '../components/header'
 
 export default function HomePage() {
   const [sidebarOpen, setSidebarOpen] = useState(true)
@@ -52,25 +53,11 @@ export default function HomePage() {
         </nav>
       </aside>
 
-      {/* 메인 컨텐츠 영역 */}
       <div className="main-content">
-        {/* 상단 헤더 */}
-        <header className="top-header">
-          <div className="header-logo">
-            <Image src={logo} alt="Cookpad Logo" width={36} height={36} />
-            <span className="logo-text-large">cookpad</span>
-          </div>
-          <div className="header-actions">
-            <button className="login-btn" onClick={handleLogin}>
-              Login
-            </button>
-            <button className="create-recipe-btn">
-              + Create a recipe
-            </button>
-          </div>
-        </header>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Header onLoginClick={handleLogin} />
+        </Suspense>
 
-        {/* 메인 컨텐츠 */}
         <main className="content-area">
           <div className="search-section">
             <div className="search-bar">
@@ -105,7 +92,6 @@ export default function HomePage() {
           <section className="category-section">
             <h3>Quick & Easy</h3>
             <div className="category-grid">
-              {/* 카테고리 카드들이 들어갈 공간 */}
               <div className="category-placeholder">Category items will go here</div>
             </div>
           </section>
@@ -116,7 +102,6 @@ export default function HomePage() {
               <span className="update-time">Updated 9:02 PM</span>
             </div>
             <div className="ingredients-grid">
-              {/* 인기 재료 카드들이 들어갈 공간 */}
               <div className="ingredient-card">Salmon</div>
               <div className="ingredient-card">Chicken Breast</div>
               <div className="ingredient-card">Pork Chops</div>
@@ -130,7 +115,6 @@ export default function HomePage() {
               <span className="update-time">Updated 8:51 PM</span>
             </div>
             <div className="dishes-grid">
-              {/* 인기 요리 카드들이 들어갈 공간 */}
               <div className="dish-card">Soup</div>
               <div className="dish-card">Chili</div>
               <div className="dish-card">Homemade Bread</div>

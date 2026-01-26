@@ -41,17 +41,14 @@ export default function LoginCard() {
   return (
     <div className="login-card">
       <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
-        <Image 
-          src={logo}
-          alt="Main Logo" 
-          width={100} 
-          height={100}
-          className="logo" 
-        />
+
+        <div className="header-logo">
+            <Image src={logo} alt="Cookpad Logo" width={60} height={60} />
+            <span className="logo-text-large">cookpad</span>
+          </div>
       </div>
 
       <h1 className="title">Sign Up or Log In</h1>
-      {/* <p className="subtitle">Login in to your account</p> */}
 
       <form onSubmit={onSubmit}>
         <label className="label" htmlFor="identifier">Bluesky Handle</label>
