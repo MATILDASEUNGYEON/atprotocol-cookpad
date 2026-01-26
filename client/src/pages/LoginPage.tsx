@@ -31,7 +31,7 @@ export default function LoginPage() {
   return (
     <div className="container">
       <h1>🦋 Bluesky 로그인</h1>
-      <p className="subtitle">AT Protocol API 테스트</p>
+      <p className="subtitle">AT Protocol API 테스트_vite</p>
 
       <form onSubmit={onSubmit}>
         <label>Bluesky Handle</label>

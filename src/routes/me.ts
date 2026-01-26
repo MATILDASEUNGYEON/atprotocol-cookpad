@@ -18,7 +18,6 @@ meRouter.get('/me', async (req, res) => {
 
     const { session, did: userDid } = result
     
-    // 공개 API를 사용하여 프로필 조회 (OAuth 토큰 없이)
     const publicAgent = new AtpAgent({ service: 'https://public.api.bsky.app' })
     const profile = await publicAgent.getProfile({ actor: userDid })
     

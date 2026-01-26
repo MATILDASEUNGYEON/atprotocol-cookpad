@@ -12,3 +12,5 @@ export const OAUTH = {
 }
 
 export const OAUTH_REDIRECT_URI = `${SERVER_ORIGIN}${OAUTH.REDIRECT_PATH}`
+
+export const WEB_ORIGIN = process.env.WEB_ORIGIN ?? 'http://localhost:0000'

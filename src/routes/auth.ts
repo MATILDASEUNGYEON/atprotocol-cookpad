@@ -1,23 +1,16 @@
 import { Router } from 'express'
 import { oauthClient } from '../auth/oauthClient'
-import { OAUTH } from '../config/env'
+import { OAUTH, WEB_ORIGIN } from '../config/env'
+import { AtpAgent } from '@atproto/api'
 
 export const authRouter = Router()
-
-authRouter.get('/login', async (req, res) => {
-  const url = await oauthClient.authorize('bsky.social', {
-    scope: OAUTH.SCOPE
-  })
-
-  res.redirect(url.toString())
-})
 
 authRouter.post('/login', async (req, res) => {
   const { identifier } = req.body
   if (!identifier) {
     return res.status(400).json({ error: 'identifier required' })
   }
-
+  console.log('로그인 시도 identifier:', identifier)
   const url = await oauthClient.authorize(identifier, {
     scope: OAUTH.SCOPE
   })
@@ -26,13 +19,30 @@ authRouter.post('/login', async (req, res) => {
 })
 
 authRouter.get('/oauth/callback', async (req, res) => {
-  const params = new URLSearchParams(req.originalUrl.split('?')[1])
+  try {
+    const params = new URLSearchParams(req.originalUrl.split('?')[1])
 
-  const oauth = await oauthClient.callback(params)
+    const oauth = await oauthClient.callback(params)
 
-  res.cookie('did', oauth.session.did, {
-    httpOnly: true,
-  })
+    res.cookie('did', oauth.session.did, {
+      httpOnly: true,
+    })
 
-  res.redirect('/me')
+    const publicAgent = new AtpAgent({ service: 'https://public.api.bsky.app' })
+    const profile = await publicAgent.getProfile({ actor: oauth.session.did })
+
+    const callbackUrl = new URL('/callback', WEB_ORIGIN)
+    callbackUrl.searchParams.set('success', 'true')
+    callbackUrl.searchParams.set('did', oauth.session.did)
+    callbackUrl.searchParams.set('handle', profile.data.handle)
+    
+    res.redirect(callbackUrl.toString())
+  } catch (error: any) {
+    console.error('OAuth 콜백 에러:', error)
+
+    const callbackUrl = new URL('/callback', WEB_ORIGIN)
+    callbackUrl.searchParams.set('error', encodeURIComponent(error.message))
+    
+    res.redirect(callbackUrl.toString())
+  }
 })
