@@ -17,6 +17,7 @@ data.db-journal
 dist/
 build/
 .next/
+client/.next/
 
 # Logs
 logs

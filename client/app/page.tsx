@@ -1,57 +1,17 @@
 'use client'
 
-import { useState, Suspense } from 'react'
-import Image from 'next/image'
-import logo from '../assets/main-logo.png'
+import { Suspense } from 'react'
 import Header from '../components/header'
+import Sidebar from '../components/Sidebar'
 
 export default function HomePage() {
-  const [sidebarOpen, setSidebarOpen] = useState(true)
-
-  const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen)
-  }
-
   const handleLogin = () => {
     window.location.href = '/login'
   }
 
   return (
     <div className="home-layout">
-      <aside className={`sidebar ${sidebarOpen ? 'open' : 'closed'}`}>
-        <div className="sidebar-header">
-          <div className="sidebar-logo">
-            <Image src={logo} alt="Cookpad Logo" width={24} height={24} />
-            {sidebarOpen && <span className="logo-text">cookpad</span>}
-          </div>
-          <button className="toggle-btn" onClick={toggleSidebar}>
-            {sidebarOpen ? '«' : '»'}
-          </button>
-        </div>
-        
-        <nav className="sidebar-nav">
-          <a href="#" className="nav-item">
-            <span className="nav-icon">🔍</span>
-            {sidebarOpen && <span>Search</span>}
-          </a>
-          <a href="#" className="nav-item">
-            <span className="nav-icon">⭐</span>
-            {sidebarOpen && <span>Premium</span>}
-          </a>
-          <a href="#" className="nav-item">
-            <span className="nav-icon">🏆</span>
-            {sidebarOpen && <span>Challenges</span>}
-          </a>
-          <a href="#" className="nav-item">
-            <span className="nav-icon">🌍</span>
-            {sidebarOpen && <span>Region</span>}
-          </a>
-          <a href="#" className="nav-item">
-            <span className="nav-icon">📚</span>
-            {sidebarOpen && <span>Your Collection</span>}
-          </a>
-        </nav>
-      </aside>
+      <Sidebar />
 
       <div className="main-content">
         <Suspense fallback={<div>Loading...</div>}>
