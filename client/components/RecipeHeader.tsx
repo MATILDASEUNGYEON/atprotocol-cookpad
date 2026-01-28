@@ -1,6 +1,7 @@
 'use client'
 
 import { RecipeDraft } from '@/types/recipe'
+import { useAuth } from '@/hooks/useAuth'
 
 type Props = {
   recipe: RecipeDraft
@@ -8,6 +9,8 @@ type Props = {
 }
 
 export default function RecipeHeader({ recipe, setRecipe }: Props) {
+  const { userInfo, getInitials } = useAuth()
+
   return (
     <div className="recipe-header">
       <input
@@ -20,10 +23,10 @@ export default function RecipeHeader({ recipe, setRecipe }: Props) {
       
       <div className="author-section">
         <div className="author-avatar">
-          <span>PA</span>
+          <span>{userInfo ? getInitials(userInfo.handle) : 'U'}</span>
         </div>
-        <span className="author-name">matilda</span>
-        <span className="author-handle">@cook_115320765</span>
+        <span className="author-name">{userInfo?.displayName || userInfo?.handle.split('.')[0] || 'User'}</span>
+        <span className="author-handle">@{userInfo?.handle || 'user'}</span>
       </div>
 
       <textarea

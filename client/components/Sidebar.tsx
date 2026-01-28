@@ -14,10 +14,10 @@ export default function Sidebar() {
   return (
     <aside className={`sidebar ${sidebarOpen ? 'open' : 'closed'}`}>
       <div className="sidebar-header">
-        <div className="sidebar-logo">
+        <a href="/" className="sidebar-logo">
           <Image src={logo} alt="Cookpad Logo" width={24} height={24} />
           {sidebarOpen && <span className="logo-text">cookpad</span>}
-        </div>
+        </a>
         <button className="toggle-btn" onClick={toggleSidebar}>
           {sidebarOpen ? '«' : '»'}
         </button>

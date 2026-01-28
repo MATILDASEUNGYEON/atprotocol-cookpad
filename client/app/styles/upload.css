@@ -3,12 +3,10 @@
 .recipe-upload-container {
   position: relative;
   margin: 0 auto;
-  /* padding: 50px; */
   padding-right: 30px;
   padding-left: 30px;
   background: #fff;
   border-radius: 20px;
-  /* border: 1px solid #999; */
 }
 
 .recipe-editor-grid {
