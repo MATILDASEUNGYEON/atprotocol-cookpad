@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Image from 'next/image'
 import logo from '../assets/main-logo.png'
+import UserMenu from './UserMenu'
 
 interface HeaderProps {
   onLoginClick?: () => void
@@ -12,6 +13,7 @@ interface HeaderProps {
 export default function Header({ onLoginClick }: HeaderProps) {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [userInfo, setUserInfo] = useState<{ did: string; handle: string } | null>(null)
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
   const searchParams = useSearchParams()
 
   useEffect(() => {
@@ -61,8 +63,12 @@ export default function Header({ onLoginClick }: HeaderProps) {
   const handleLogout = () => {
     document.cookie = 'did=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
     localStorage.removeItem('userHandle')
+    localStorage.removeItem('userDisplayName')
+    localStorage.removeItem('userLocation')
+    localStorage.removeItem('userBio')
     setIsLoggedIn(false)
     setUserInfo(null)
+    setIsMenuOpen(false)
     window.location.href = '/'
   }
 
@@ -96,14 +102,19 @@ export default function Header({ onLoginClick }: HeaderProps) {
             <button className="create-recipe-btn" onClick={handleCreateRecipe}>
               + Create a recipe
             </button>
-            <div className="user-menu">
-              <div className="user-info">
+            <div className="user-menu" style={{ position: 'relative' }}>
+              <button 
+                className="user-info"
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+              >
                 <span className="user-icon">👤</span>
                 <span className="user-handle">@{userInfo?.handle}</span>
-              </div>
-              <button className="logout-btn" onClick={handleLogout}>
-                Logout
               </button>
+              <UserMenu 
+                isOpen={isMenuOpen}
+                onClose={() => setIsMenuOpen(false)}
+                onLogout={handleLogout}
+              />
             </div>
           </>
         )}

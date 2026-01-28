@@ -1,13 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-
-export interface UserInfo {
-  did: string
-  handle: string
-  displayName?: string
-  avatar?: string
-}
+import { UserInfo } from '../types/auth'
 
 export function useAuth() {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
@@ -42,7 +36,6 @@ export function useAuth() {
 
     checkLoginStatus()
 
-    // URL에서 로그인 정보 확인 (OAuth 콜백 후)
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search)
       const loginSuccess = params.get('login')
@@ -77,10 +70,8 @@ export function useAuth() {
   const getInitials = (handle: string) => {
     if (!handle) return 'U'
     
-    // handle이 @로 시작하면 제거
     const cleanHandle = handle.startsWith('@') ? handle.slice(1) : handle
     
-    // handle에서 첫 두 글자를 대문자로
     const parts = cleanHandle.split('.')
     if (parts.length > 0) {
       const firstPart = parts[0]

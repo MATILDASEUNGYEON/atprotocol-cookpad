@@ -1,0 +1,232 @@
+.profile-edit-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  position: relative;
+}
+
+.back-button {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #f5f5f5;
+  border: 1px solid #ddd;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.back-button:hover {
+  background: #e8e8e8;
+}
+
+.edit-form {
+  max-width: 600px;
+  margin: 60px auto 0;
+}
+
+.avatar-section {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 40px;
+}
+
+.edit-avatar {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ff6b9d 0%, #c239b3 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  font-size: 48px;
+  position: relative;
+  box-shadow: 0 4px 12px rgba(255, 107, 157, 0.3);
+}
+
+.avatar-edit-icons {
+  position: absolute;
+  bottom: -10px;
+  right: -10px;
+  display: flex;
+  gap: 8px;
+}
+
+.avatar-edit-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: white;
+  border: 2px solid #ddd;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  transition: all 0.2s;
+}
+
+.avatar-edit-btn:hover {
+  background: #f5f5f5;
+  border-color: #ff6b81;
+}
+
+.form-group {
+  margin-bottom: 32px;
+}
+
+.form-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.form-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: none;
+  border-bottom: 2px solid #e0e0e0;
+  font-size: 16px;
+  color: #333;
+  outline: none;
+  transition: border-color 0.2s;
+  background: transparent;
+}
+
+.form-input:focus {
+  border-bottom-color: #ff6b81;
+}
+
+.form-input:disabled {
+  color: #999;
+  cursor: not-allowed;
+}
+
+.form-input::placeholder {
+  color: #ccc;
+}
+
+.form-textarea {
+  width: 100%;
+  padding: 12px 16px;
+  border: none;
+  border-bottom: 2px solid #e0e0e0;
+  font-size: 16px;
+  color: #333;
+  outline: none;
+  transition: border-color 0.2s;
+  background: transparent;
+  resize: vertical;
+  font-family: inherit;
+}
+
+.form-textarea:focus {
+  border-bottom-color: #ff6b81;
+}
+
+.form-textarea::placeholder {
+  color: #ccc;
+}
+
+.input-with-action {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  border-bottom: 2px solid #e0e0e0;
+  position: relative;
+}
+
+.input-with-action:focus-within {
+  border-bottom-color: #ff6b81;
+}
+
+.input-with-action .form-input {
+  border: none;
+  flex: 1;
+  padding-right: 0;
+}
+
+.action-btn {
+  padding: 6px 16px;
+  background: transparent;
+  border: none;
+  color: #ff6b81;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.2s;
+  flex-shrink: 0;
+}
+
+.action-btn:hover {
+  color: #ff5070;
+}
+
+.form-actions {
+  display: flex;
+  gap: 16px;
+  margin-top: 48px;
+}
+
+.update-btn {
+  flex: 1;
+  padding: 16px 24px;
+  background: #333;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.update-btn:hover {
+  background: #1a1a1a;
+}
+
+.cancel-btn {
+  flex: 1;
+  padding: 16px 24px;
+  background: #f5f5f5;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  color: #666;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cancel-btn:hover {
+  background: #e8e8e8;
+}
+
+@media (max-width: 768px) {
+  .profile-edit-container {
+    padding: 20px 16px;
+  }
+
+  .back-button {
+    top: 10px;
+    left: 10px;
+  }
+
+  .edit-form {
+    margin-top: 40px;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+}
