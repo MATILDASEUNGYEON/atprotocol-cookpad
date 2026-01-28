@@ -72,7 +72,7 @@ export default function Header({ onLoginClick }: HeaderProps) {
       handleLogin()
       return
     }
-    window.location.href = '/create'
+    window.location.href = '/upload'
   }
 
   return (
