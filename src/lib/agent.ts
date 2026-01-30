@@ -1,4 +1,3 @@
-// src/lib/agent.ts
 import { AtpAgent } from '@atproto/api'
 import { oauthClient } from '../auth/oauthClient'
 import type { OAuthSession } from '@atproto/oauth-client-node'
@@ -9,14 +8,14 @@ export async function getAgentByDid(
   const oauthSession = await oauthClient.restore(did)
   if (!oauthSession) return null
 
-  // ✅ OAuth issuer = PDS URL
+  // ✅ 반드시 PDS 사용
   const pdsUrl = oauthSession.serverMetadata.issuer
 
   if (!pdsUrl) {
-    throw new Error('PDS URL not found in OAuth session metadata')
+    throw new Error('PDS URL not found in OAuth session')
   }
 
-  // ✅ OAuth 세션에 바인딩된 fetch 그대로 사용
+  // OAuth fetchHandler 그대로 사용
   const authenticatedFetch = (
     input: RequestInfo | URL,
     init?: RequestInit,
@@ -27,13 +26,13 @@ export async function getAgentByDid(
   }
 
   const agent = new AtpAgent({
-    service: pdsUrl,
+    service: pdsUrl,   // ✅ PDS endpoint
     fetch: authenticatedFetch,
   })
 
   return {
     agent,
-    did: oauthSession.sub, // DID
+    did: oauthSession.sub,
     session: oauthSession,
   }
 }

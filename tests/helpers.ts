@@ -1,4 +1,3 @@
-import { AtpAgent } from '@atproto/api'
 import { oauthClient } from '../src/auth/oauthClient'
 import { Agent } from '@atproto/api'
 

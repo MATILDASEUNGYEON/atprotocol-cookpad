@@ -1,0 +1,85 @@
+'use client'
+
+import { SortTab } from '@/types/filter'
+
+interface SearchHeaderProps {
+  category: string
+  totalCount: number
+  activeTab: SortTab
+  onTabChange: (tab: SortTab) => void
+}
+
+export default function SearchHeader({ 
+  category, 
+  totalCount, 
+  activeTab, 
+  onTabChange 
+}: SearchHeaderProps) {
+  // Format category for display
+  const displayCategory = category
+    .split('-')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' & ')
+
+  // Get related subcategories
+  const getSubcategories = (cat: string) => {
+    const subcategories: { [key: string]: string[] } = {
+      'quick-easy': ['Appetizers', 'Breakfast', 'Dinners', 'Desserts'],
+      'vegetarian': ['Salads', 'Main Courses', 'Snacks', 'Soups'],
+      'desserts': ['Cakes', 'Cookies', 'Pies', 'Ice Cream']
+    }
+    return subcategories[cat] || []
+  }
+
+  const subcategories = getSubcategories(category)
+
+  return (
+    <div className="search-header">
+      <div className="search-title">
+        <h1>
+          {displayCategory} <span className="count">({totalCount.toLocaleString()})</span>
+        </h1>
+      </div>
+
+      {subcategories.length > 0 && (
+        <div className="subcategories">
+          {subcategories.map((sub) => (
+            <a key={sub} href={`/search/${category}/${sub.toLowerCase()}`} className="subcategory-link">
+              {displayCategory} {sub}
+            </a>
+          ))}
+          <button className="see-more">See more</button>
+        </div>
+      )}
+
+      <div className="country-tags">
+        <span className="tag-label">From</span>
+        <div className="country-tag-list">
+          <button className="country-tag active">🇺🇸 United States</button>
+          <button className="country-tag">🇮🇹 Italy</button>
+          <button className="country-tag">🇯🇵 Japan</button>
+          <button className="country-tag">🇬🇷 Greece</button>
+          <button className="country-tag">🇹🇼 Taiwan</button>
+          <button className="country-tag">🇪🇸 Spain</button>
+          <button className="country-tag">🇻🇳 Vietnam</button>
+          <button className="country-tag">🇮🇳 India</button>
+        </div>
+      </div>
+
+      <div className="sort-tabs">
+        <button 
+          className={`tab ${activeTab === 'new' ? 'active' : ''}`}
+          onClick={() => onTabChange('new')}
+        >
+          New
+        </button>
+        <button 
+          className={`tab ${activeTab === 'ranking' ? 'active' : ''}`}
+          onClick={() => onTabChange('ranking')}
+        >
+          🏆 Ranking
+        </button>
+      </div>
+    </div>
+  )
+}

@@ -4,91 +4,103 @@
   "defs": {
     "main": {
       "type": "record",
-      "description": "Recipe record schema for Cookpad service",
+      "description": "Recipe record",
       "key": "tid",
       "record": {
         "type": "object",
-        "required": ["title", "ingredients", "steps", "createdAt"],
+        "required": ["title", "ingredients", "steps"],
         "properties": {
           "title": {
             "type": "string",
-            "description": "Recipe title",
             "maxLength": 300
           },
           "description": {
             "type": "string",
-            "description": "Recipe description",
             "maxLength": 3000
           },
+
           "ingredients": {
             "type": "array",
-            "description": "List of ingredients",
+            "description": "Ordered list of ingredient items and sections",
             "items": {
-              "type": "string",
-              "maxLength": 200
+              "type": "ref",
+              "ref": "#ingredientItem"
             }
           },
+
           "steps": {
             "type": "array",
-            "description": "Cooking steps",
             "items": {
               "type": "ref",
               "ref": "#step"
             }
           },
+
           "cookTimeMinutes": {
             "type": "integer",
-            "description": "Estimated cooking time in minutes",
             "minimum": 0,
             "maximum": 10000
           },
+
           "servings": {
             "type": "integer",
-            "description": "Number of servings",
             "minimum": 1,
             "maximum": 100
           },
-          "coverImage": {
+
+          "thumbnail": {
             "type": "blob",
-            "description": "Recipe cover image",
             "accept": ["image/png", "image/jpeg", "image/webp"],
             "maxSize": 1000000
           },
+
           "tags": {
             "type": "array",
-            "description": "Recipe tags",
             "items": {
               "type": "string",
               "maxLength": 50
             },
             "maxLength": 20
           },
-          "createdAt": {
+
+          "visibility": {
             "type": "string",
-            "format": "datetime",
-            "description": "Recipe creation timestamp"
-          },
-          "updatedAt": {
-            "type": "string",
-            "format": "datetime",
-            "description": "Recipe last update timestamp"
+            "enum": ["draft", "published"],
+            "default": "published"
           }
         }
       }
     },
+
+    "ingredientItem": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["ingredient", "section"]
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "title": {
+          "type": "string",
+          "maxLength": 200
+        }
+      }
+    },
+
     "step": {
       "type": "object",
-      "description": "A single cooking step",
       "required": ["text"],
       "properties": {
         "text": {
           "type": "string",
-          "description": "Step instruction text",
           "maxLength": 1000
         },
         "image": {
           "type": "blob",
-          "description": "Step image (optional)",
           "accept": ["image/png", "image/jpeg", "image/webp"],
           "maxSize": 1000000
         }

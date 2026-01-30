@@ -60,40 +60,53 @@ export default function RecipeActions({ recipe }: Props) {
     }
 
     try {
-      // TODO: API call to publish recipe
       const formData = new FormData()
-      
-      if (recipe.thumbnail) {
-        formData.append('thumbnail', recipe.thumbnail)
-      }
-      
+
       formData.append('title', recipe.title)
       formData.append('description', recipe.description)
-      formData.append('serves', recipe.serves.toString())
+      formData.append('serves', String(recipe.serves))
       formData.append('cookTime', recipe.cookTime)
       formData.append('ingredients', JSON.stringify(recipe.ingredients))
       formData.append('tips', recipe.tips)
       formData.append('status', 'published')
 
-      recipe.steps.forEach((step, index) => {
+      if (recipe.thumbnail) {
+        formData.append('thumbnail', recipe.thumbnail)
+      }
+
+      formData.append(
+        'steps',
+        JSON.stringify(
+          recipe.steps.map(step => ({
+            id: step.id,
+            description: step.description,
+          }))
+        )
+      )
+
+      recipe.steps.forEach(step => {
         if (step.image) {
-          formData.append(`step_${index}_image`, step.image)
+          formData.append(`stepImage:${step.id}`, step.image)
         }
-        formData.append(`step_${index}_description`, step.description)
       })
 
-      // const response = await fetch('/api/recipes', {
-      //   method: 'POST',
-      //   body: formData,
-      // })
+      const res = await fetch('/api/recipe', {
+        method: 'POST',
+        body: formData,
+      })
+
+      if (!res.ok) {
+        throw new Error('Upload failed')
+      }
 
       alert('Recipe published!')
-      router.push('/') // Redirect to home
-    } catch (error) {
-      console.error('Failed to publish recipe:', error)
+      router.push('/')
+    } catch (err) {
+      console.error(err)
       alert('Failed to publish recipe')
     }
   }
+
 
   return (
     <div className="recipe-actions">
