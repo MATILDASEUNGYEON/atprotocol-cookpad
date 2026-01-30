@@ -1,7 +1,7 @@
 'use client'
 
 import Image from 'next/image'
-
+import { useAuth } from '@/hooks/useAuth'
 interface RecipeDetailHeaderProps {
   title: string
   description: string
@@ -19,6 +19,7 @@ export default function RecipeDetailHeader({
   author,
   status
 }: RecipeDetailHeaderProps) {
+  const { userInfo, getInitials } = useAuth()
   return (
     <div className="recipe-detail-header">
       <h1 className="recipe-title">{title}</h1>
@@ -27,34 +28,23 @@ export default function RecipeDetailHeader({
         <span className="recipe-status">{status}</span>
       )}
 
-      {/* Author info */}
       <div className="recipe-author">
-        <div className="author-avatar">
-          {author.avatar ? (
-            <Image 
-              src={author.avatar} 
-              alt={author.handle}
-              width={40}
-              height={40}
-            />
-          ) : (
-            <div className="avatar-placeholder">
-              {author.handle[0].toUpperCase()}
-            </div>
-          )}
-        </div>
-        <div className="author-info">
-          <div className="author-name">
-            Culinates <span className="author-handle">"{author.displayName || author.handle}"</span> <span className="handle-id">@{author.handle}</span>
+        <div className="user-menu-header">
+          <div className="user-menu-avatar">
+            <span>{userInfo ? getInitials(userInfo.handle) : 'U'}</span>
           </div>
-          <div className="author-meta">@ USA</div>
-        </div>
+          <div className="user-menu-info">
+            <div className="user-menu-name">
+              {userInfo?.displayName || userInfo?.handle.split('.')[0] || 'User'}
+            </div>
+            <div className="user-menu-handle">@{userInfo?.handle || 'user'}</div>
+          </div>
+        </div>    
+
       </div>
 
-      {/* Recipe description */}
       <div className="recipe-description">
         <p>{description}</p>
-        <button className="read-more">Read more</button>
       </div>
     </div>
   )

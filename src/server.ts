@@ -1,14 +1,21 @@
 import { app } from './app'
 import { SERVER_ORIGIN } from './config/env'
-import { createDb, migrateToLatest } from './db'
+import { initializeDb, migrateToLatest } from './db'
+import { startFirehoseConsumer } from './firehose/consumer'
 
-export const db = createDb('./data.db')
+// db 초기화 (전역 db 인스턴스에 할당)
+const db = initializeDb('./data.db')
 
 const PORT = parseInt(process.env.PORT ?? '3000')
 
 migrateToLatest(db)
   .then(() => {
     console.log('✅ DB 마이그레이션 완료')
+    
+    // Firehose consumer 시작
+    startFirehoseConsumer().catch((err) => {
+      console.error('❌ Firehose consumer 시작 실패:', err)
+    })
   })
   .catch((err) => {
     console.error('❌ DB 마이그레이션 실패:', err)

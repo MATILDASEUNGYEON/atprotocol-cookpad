@@ -8,7 +8,7 @@ interface RecipeDetailActionsProps {
   onSave: () => void
   onAddToFolder: () => void
   onShare: () => void
-  onPrint: () => void
+  onDelete: () => void
 }
 
 export default function RecipeDetailActions({
@@ -19,11 +19,10 @@ export default function RecipeDetailActions({
   onSave,
   onAddToFolder,
   onShare,
-  onPrint
+  onDelete
 }: RecipeDetailActionsProps) {
   return (
     <div className="recipe-detail-actions">
-      {/* Top actions - Like and Share */}
       <div className="top-actions">
         <button 
           className={`action-btn like-btn ${isLiked ? 'liked' : ''}`}
@@ -39,7 +38,6 @@ export default function RecipeDetailActions({
         </button>
       </div>
 
-      {/* Main action buttons */}
       <div className="main-actions">
         <button 
           className={`main-action-btn save-btn ${isSaved ? 'saved' : ''}`}
@@ -66,11 +64,11 @@ export default function RecipeDetailActions({
         </button>
 
         <button 
-          className="main-action-btn print-btn"
-          onClick={onPrint}
+          className="main-action-btn delete-btn"
+          onClick={onDelete}
         >
-          <span className="icon">🖨️</span>
-          Print
+          <span className="icon">🗑</span>
+          Delete
         </button>
       </div>
     </div>

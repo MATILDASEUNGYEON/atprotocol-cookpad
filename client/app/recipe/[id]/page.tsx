@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, Suspense } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
 import Header from '@/components/header'
@@ -11,86 +11,60 @@ import RecipeIngredientsDisplay from '@/components/RecipeIngredientsDisplay'
 import RecipeStepsDisplay from '@/components/RecipeStepsDisplay'
 import '../../styles/recipe-detail.css'
 
-// Mock data - 나중에 실제 API로 교체
-const getMockRecipe = (id: string) => {
-  return {
-    uri: `at://did:plc:123/app.bookhive.recipe/${id}`,
-    title: 'Pasta Recipe! Quick, easy & incredibly delicious',
-    description: 'Complete recipe - just search for 🤪 Culinates 71 on YouTube',
-    thumbnailUrl: '/mock/pasta.jpg',
-    cookTimeMinutes: 35,
-    serves: 3,
-    ingredients: [
-      { id: '1', type: 'ingredient' as const, name: '50 g salted lard' },
-      { id: '2', type: 'ingredient' as const, name: '1 onion' },
-      { id: '3', type: 'ingredient' as const, name: '150 g carrots' },
-      { id: '4', type: 'ingredient' as const, name: '4 eggs' },
-      { id: '5', type: 'ingredient' as const, name: '2 g pepper' },
-      { id: '6', type: 'ingredient' as const, name: '1 tsp burger seasoning' },
-      { id: '7', type: 'ingredient' as const, name: '1 tsp paprika powder' },
-      { id: '8', type: 'ingredient' as const, name: '0.25 tsp coriander' },
-      { id: '9', type: 'ingredient' as const, name: '1 tsp basil' },
-      { id: '10', type: 'ingredient' as const, name: '30 g cream' },
-      { id: '11', type: 'ingredient' as const, name: '1 pinch chili powder' },
-      { id: '12', type: 'ingredient' as const, name: '200 g feta cheese' },
-      { id: '13', type: 'ingredient' as const, name: '3 hand mixer' },
-      { id: '14', type: 'ingredient' as const, name: '5 g parsley, dill' },
-      { id: '15', type: 'ingredient' as const, name: '300-400 g pre-cooked pasta' },
-    ],
-    steps: [
-      {
-        id: '1',
-        description: 'First, cut the lard into cubes and fry for 5 minutes.',
-        image: new File([], '/mock/step1.jpg')
-      },
-      {
-        id: '2',
-        description: 'Then add a diced onion and fry for another 5 minutes.',
-        image: new File([], '/mock/step2.jpg')
-      },
-      {
-        id: '3',
-        description: 'Next, add the carrots and simmer, covered, over low heat for 10 minutes.',
-        image: new File([], '/mock/step3.jpg')
-      },
-      {
-        id: '4',
-        description: 'Crack the eggs into a bowl and add the spices.',
-        image: new File([], '/mock/step4.jpg')
-      },
-      {
-        id: '5',
-        description: 'Crumble the feta cheese into a bowl and mix it with a fork.',
-        image: undefined
-      },
-    ],
-    author: {
-      handle: 'culinates_english',
-      displayName: 'English',
-      did: 'did:plc:123',
-      avatar: undefined
-    },
-    likesCount: 1,
-    isLiked: false,
-    isBookmarked: false,
-    createdAt: new Date().toISOString()
-  }
-}
-
 interface RecipeDetailPageProps {
   params: { id: string }
 }
 
 export default function RecipeDetailPage({ params }: RecipeDetailPageProps) {
-  const recipe = getMockRecipe(params.id)
-  
+  const [recipe, setRecipe] = useState<any>(null)
+  const [loading, setLoading] = useState(true)
+  const [isLiked, setIsLiked] = useState(false)
+  const [isSaved, setIsSaved] = useState(false)
+  const [likesCount, setLikesCount] = useState(0)
+
+  useEffect(() => {
+    async function fetchRecipe() {
+      try {
+        setLoading(true)
+        const response = await fetch(`/api/recipe/${params.id}`)
+        
+        if (!response.ok) {
+          if (response.status === 404) {
+            notFound()
+          }
+          throw new Error('Failed to fetch recipe')
+        }
+
+        const data = await response.json()
+        setRecipe(data)
+        setIsLiked(data.isLiked || false)
+        setIsSaved(data.isBookmarked || false)
+        setLikesCount(data.likesCount || 0)
+      } catch (error) {
+        console.error('Failed to fetch recipe:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchRecipe()
+  }, [params.id])
+
+  if (loading) {
+    return (
+      <div className='home-layout'>
+        <Sidebar />
+        <div className='main-content'>
+          <Header />
+          <div className="loading-state">로딩 중...</div>
+        </div>
+      </div>
+    )
+  }
+
   if (!recipe) {
     notFound()
   }
-
-  const [isLiked, setIsLiked] = useState(recipe.isLiked)
-  const [isSaved, setIsSaved] = useState(recipe.isBookmarked)
-  const [likesCount, setLikesCount] = useState(recipe.likesCount)
 
   const handleLike = () => {
     setIsLiked(!isLiked)
@@ -109,8 +83,8 @@ export default function RecipeDetailPage({ params }: RecipeDetailPageProps) {
     console.log('Share recipe')
   }
 
-  const handlePrint = () => {
-    window.print()
+  const handleDelete = () => {
+    console.log('Delete recipe')
   }
 
   return (
@@ -124,41 +98,39 @@ export default function RecipeDetailPage({ params }: RecipeDetailPageProps) {
 
         <main className='content-area'>
           <div className='recipe-detail-layout'>
-            {/* Left Column */}
             <div className='recipe-left-column'>
-              {/* Recipe Image */}
               <div className='recipe-detail-image'>
-                {recipe.thumbnailUrl ? (
+                {recipe.thumbnail_url ? (
                   <Image
-                    src={recipe.thumbnailUrl}
+                    src={recipe.thumbnail_url}
                     alt={recipe.title}
                     width={600}
                     height={450}
                     priority
                   />
                 ) : (
-                  <div className="image-placeholder">No Image</div>
+                  <div className="image-placeholder">🍳 No Image</div>
                 )}
               </div>
 
-              {/* Ingredients */}
               <RecipeIngredientsDisplay
-                serves={recipe.serves}
-                ingredients={recipe.ingredients}
+                serves={recipe.servings || 1}
+                ingredients={recipe.ingredients || []}
               />
             </div>
 
-            {/* Right Column */}
             <div className='recipe-right-column'>
-              {/* Header */}
               <RecipeDetailHeader
                 title={recipe.title}
-                description={recipe.description}
-                author={recipe.author}
-                status="Mich reached"
+                description={recipe.description || ''}
+                author={{
+                  handle: recipe.author_did.split(':').pop() || 'user',
+                  displayName: 'User',
+                  avatar: undefined
+                }}
+                status="Published"
               />
 
-              {/* Actions */}
               <RecipeDetailActions
                 isLiked={isLiked}
                 isSaved={isSaved}
@@ -167,13 +139,12 @@ export default function RecipeDetailPage({ params }: RecipeDetailPageProps) {
                 onSave={handleSave}
                 onAddToFolder={handleAddToFolder}
                 onShare={handleShare}
-                onPrint={handlePrint}
+                onDelete={handleDelete}
               />
 
-              {/* Steps */}
               <RecipeStepsDisplay
-                cookTimeMinutes={recipe.cookTimeMinutes}
-                steps={recipe.steps}
+                cookTimeMinutes={recipe.cook_time_minutes || 0}
+                steps={recipe.steps || []}
               />
             </div>
           </div>

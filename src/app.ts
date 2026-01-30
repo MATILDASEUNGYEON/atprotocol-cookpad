@@ -4,6 +4,7 @@ import path from 'path'
 import cors from 'cors'
 import { authRouter } from './routes/auth'
 import { meRouter } from './routes/me'
+import { recipeRouter } from './routes/recipe'
 import { WEB_ORIGIN } from './config/env'
 export const app = express()
 
@@ -27,8 +28,9 @@ const clientBuildPath = path.join(__dirname, '../client/dist')
 
 app.use(express.static(clientBuildPath))
 
-app.use(authRouter)
-app.use(meRouter)
+// app.use(authRouter)
+// app.use(meRouter)
+app.use(recipeRouter)
 
 app.get(/.*/, (req, res) => {
   res.sendFile(path.join(clientBuildPath, 'index.html'))

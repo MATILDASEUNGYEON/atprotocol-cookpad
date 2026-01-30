@@ -9,8 +9,7 @@ export function useRecipeEditor() {
     cookTime: '',
     ingredients: [
       { id: crypto.randomUUID(), type: 'ingredient', name: '' },
-      { id: crypto.randomUUID(), type: 'ingredient', name: '' },
-      { id: crypto.randomUUID(), type: 'ingredient', name: '' },
+      { id: crypto.randomUUID(), type: 'ingredient', name: '' }
     ],
     steps: [
       { id: crypto.randomUUID(), description: '', image: null },
