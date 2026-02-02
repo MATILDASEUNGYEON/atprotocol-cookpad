@@ -3,17 +3,14 @@ import { getSessionAgent } from '@/lib/agent'
 
 export async function POST(req: NextRequest) {
   try {
-    // 1️⃣ OAuth 세션 확인
     const did = req.cookies.get('did')?.value
     if (!did) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    // 2️⃣ OAuth 세션 복원 (AT Protocol 개입 시작)
     console.log('🔐 OAuth session restore for DID:', did)
     const { agent, did: repoDid } = await getSessionAgent(did)
 
-    // 3️⃣ FormData 파싱
     const formData = await req.formData()
     
     const title = formData.get('title') as string
@@ -25,10 +22,8 @@ export async function POST(req: NextRequest) {
     const status = formData.get('status') as string
     const steps = JSON.parse(formData.get('steps') as string)
 
-    // 4️⃣ Blob 업로드 (이미지 → PDS)
     console.log('📤 Uploading blobs to PDS...')
     
-    // Thumbnail blob
     let thumbnailBlob = null
     const thumbnailFile = formData.get('thumbnail') as File | null
     if (thumbnailFile) {
@@ -41,7 +36,6 @@ export async function POST(req: NextRequest) {
       console.log('✅ Thumbnail uploaded:', thumbnailBlob)
     }
 
-    // Step images blobs
     const stepsWithBlobs = await Promise.all(
       steps.map(async (step: any) => {
         const stepImageFile = formData.get(`stepImage:${step.id}`) as File | null
@@ -64,7 +58,6 @@ export async function POST(req: NextRequest) {
       })
     )
 
-    // 5️⃣ Recipe Record 생성 (핵심 순간 - AT Protocol 객체 생성)
     console.log('📝 Creating recipe record on PDS...')
     
     const recipeRecord = {
@@ -120,10 +113,9 @@ export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url)
     const limit = parseInt(searchParams.get('limit') || '20')
-    const author = searchParams.get('author') // DID로 필터링
+    const author = searchParams.get('author')
     const visibility = searchParams.get('visibility') || 'published'
 
-    // AppView 서버에 요청
     const appViewUrl = process.env.NEXT_PUBLIC_APP_VIEW_URL || 'http://localhost:3000'
     const queryParams = new URLSearchParams({
       limit: limit.toString(),

@@ -1,6 +1,8 @@
 'use client'
 
 interface RecipeDetailActionsProps {
+  isOwner: boolean
+  isLoggedIn: boolean
   isLiked: boolean
   isSaved: boolean
   likesCount: number
@@ -12,6 +14,8 @@ interface RecipeDetailActionsProps {
 }
 
 export default function RecipeDetailActions({
+  isOwner,
+  isLoggedIn,
   isLiked,
   isSaved,
   likesCount,
@@ -24,52 +28,77 @@ export default function RecipeDetailActions({
   return (
     <div className="recipe-detail-actions">
       <div className="top-actions">
-        <button 
+        <button
           className={`action-btn like-btn ${isLiked ? 'liked' : ''}`}
           onClick={onLike}
+          disabled={!isLoggedIn}
         >
-          <span className="icon">❤️</span>
-          <span className="count">{likesCount}</span>
+          ❤️ <span className="count">{likesCount}</span>
         </button>
-        
+
         <button className="action-btn" onClick={onShare}>
-          <span className="icon">📤</span>
-          <span className="count">1</span>
+          📤
         </button>
       </div>
 
       <div className="main-actions">
-        <button 
-          className={`main-action-btn save-btn ${isSaved ? 'saved' : ''}`}
-          onClick={onSave}
-        >
-          <span className="icon">📑</span>
-          Save Recipe
-        </button>
+        {isOwner ? (
+          <>
+            <button className="main-action-btn edit-btn">
+              ✏️ Edit recipe
+            </button>
 
-        <button 
-          className="main-action-btn folder-btn"
-          onClick={onAddToFolder}
-        >
-          <span className="icon">📁</span>
-          Add to folders
-        </button>
+            <button
+              className="main-action-btn folder-btn"
+              onClick={onAddToFolder}
+            >
+              📁 Add to folders
+            </button>
 
-        <button 
-          className="main-action-btn share-btn"
-          onClick={onShare}
-        >
-          <span className="icon">📤</span>
-          Share
-        </button>
+            <button
+              className="main-action-btn share-btn"
+              onClick={onShare}
+            >
+              📤 Share
+            </button>
 
-        <button 
-          className="main-action-btn delete-btn"
-          onClick={onDelete}
-        >
-          <span className="icon">🗑</span>
-          Delete
-        </button>
+            <button
+              className="main-action-btn delete-btn"
+              onClick={onDelete}
+            >
+              🗑 Delete
+            </button>
+          </>
+        ) : (
+          <>
+            <button
+              className={`main-action-btn save-btn ${isSaved ? 'saved' : ''}`}
+              onClick={onSave}
+              disabled={!isLoggedIn}
+            >
+              📑 Save Recipe
+            </button>
+
+            <button
+              className="main-action-btn folder-btn"
+              onClick={onAddToFolder}
+              disabled={!isLoggedIn}
+            >
+              📁 Add to folders
+            </button>
+
+            <button
+              className="main-action-btn share-btn"
+              onClick={onShare}
+            >
+              📤 Share
+            </button>
+
+            <button className="main-action-btn report-btn">
+              🚨 Report Recipe
+            </button>
+          </>
+        )}
       </div>
     </div>
   )

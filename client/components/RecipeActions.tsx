@@ -12,8 +12,7 @@ export default function RecipeActions({ recipe }: Props) {
 
   const handleDelete = () => {
     if (confirm('Are you sure you want to delete this recipe?')) {
-      // TODO: API call to delete recipe
-      router.push('/') // Redirect to home
+      router.push('/')
     }
   }
 
