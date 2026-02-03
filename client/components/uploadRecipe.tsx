@@ -1,9 +1,17 @@
 type Props = {
-  thumbnail?: File | null
+  thumbnail?: File | string | null
   onChange: (file: File) => void
 }
 
 export default function RecipeThumbnail({ thumbnail, onChange }: Props) {
+  const getImageSrc = () => {
+    if (!thumbnail) return null
+    if (typeof thumbnail === 'string') return thumbnail
+    return URL.createObjectURL(thumbnail)
+  }
+
+  const imageSrc = getImageSrc()
+
   return (
     <label className="thumbnail-box">
       <input
@@ -14,8 +22,8 @@ export default function RecipeThumbnail({ thumbnail, onChange }: Props) {
           if (e.target.files?.[0]) onChange(e.target.files[0])
         }}
       />
-      {thumbnail ? (
-        <img src={URL.createObjectURL(thumbnail)} />
+      {imageSrc ? (
+        <img src={imageSrc} alt="Recipe thumbnail" />
       ) : (
         <span>Upload recipe photo</span>
       )}

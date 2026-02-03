@@ -32,6 +32,12 @@
   flex-shrink: 0;
 }
 
+.user-menu-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 .user-menu-info {
   flex: 1;
   overflow: hidden;

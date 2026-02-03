@@ -13,8 +13,6 @@ const JETSTREAM_URL = 'wss://jetstream2.us-east.bsky.network/subscribe'
  * 3. AppView DB에 인덱싱
  */
 export async function startFirehoseConsumer() {
-  console.log('🔥 Starting Firehose Consumer...')
-  console.log('📡 Connecting to Jetstream:', JETSTREAM_URL)
 
   const jetstream = new Jetstream({
     ws: WebSocket,
@@ -23,7 +21,6 @@ export async function startFirehoseConsumer() {
 
   jetstream.onCreate('com.cookpad.recipe', async (event) => {
     try {
-      console.log('📥 New recipe created:', event.commit.record)
       
       const { did, commit } = event
       const record = commit.record as any
@@ -43,7 +40,6 @@ export async function startFirehoseConsumer() {
         indexed_at: new Date().toISOString(),
       })
 
-      console.log('✅ Recipe indexed successfully')
     } catch (error) {
       console.error('❌ Failed to index recipe:', error)
     }
@@ -51,7 +47,6 @@ export async function startFirehoseConsumer() {
 
   jetstream.onUpdate('com.cookpad.recipe', async (event) => {
     try {
-      console.log('🔄 Recipe updated:', event.commit.record)
       
       const { did, commit } = event
       const record = commit.record as any
@@ -68,7 +63,6 @@ export async function startFirehoseConsumer() {
         visibility: record.visibility || 'published',
       })
 
-      console.log('✅ Recipe index updated')
     } catch (error) {
       console.error('❌ Failed to update recipe index:', error)
     }
@@ -79,20 +73,16 @@ export async function startFirehoseConsumer() {
       const { did, commit } = event
       const uri = `at://${did}/${commit.collection}/${commit.rkey}`
       
-      console.log('🗑️ Recipe deleted:', uri)
       
       await deleteRecipeIndex(uri)
       
-      console.log('✅ Recipe removed from index')
     } catch (error) {
       console.error('❌ Failed to delete recipe from index:', error)
     }
   })
 
   jetstream.start()
-
   console.log('✅ Firehose Consumer started')
-  console.log('👂 Listening for com.cookpad.recipe events...')
 }
 
 /**

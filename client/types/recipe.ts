@@ -20,7 +20,7 @@ export type Step = {
 }
 
 export type RecipeDraft = {
-  thumbnail?: File | null
+  thumbnail?: File | string | null
   title: string
   description: string
   serves: number

@@ -19,7 +19,6 @@ export default function RecipeDetailHeader({
   author,
   status
 }: RecipeDetailHeaderProps) {
-  const { getInitials } = useAuth()
   
   const getAuthorInitials = (handle: string) => {
     return handle.split('.')[0].substring(0, 2).toUpperCase()

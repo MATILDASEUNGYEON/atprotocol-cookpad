@@ -34,9 +34,7 @@ recipeRouter.get('/api/recipes', async (req, res) => {
         return res.status(404).json({ error: 'Recipe not found' })
       }
 
-      console.log('🔍 [API] cook_time_minutes from DB:', recipe.cook_time_minutes, typeof recipe.cook_time_minutes)
       const cookTime = formatCookTimeMinutes(recipe.cook_time_minutes as number)
-      console.log('✅ [API] Formatted to:', cookTime)
 
       return res.json({
         ...recipe,
@@ -61,7 +59,6 @@ recipeRouter.get('/api/recipes', async (req, res) => {
     res.json({
       recipes: recipes.map(recipe => {
         const cookTime = formatCookTimeMinutes(recipe.cook_time_minutes as number)
-        console.log('🔍 [API] Recipe:', recipe.title, 'cook_time_minutes:', recipe.cook_time_minutes, '→', cookTime)
         return {
           ...recipe,
           cook_time_minutes: cookTime,
@@ -84,7 +81,6 @@ recipeRouter.get('/api/recipes/:rkey', async (req, res) => {
   try {
     const { rkey } = req.params
 
-    console.log('🔍 Fetching recipe by rkey:', rkey)
 
     const recipeIndex = await db
       .selectFrom('recipe')
@@ -93,13 +89,9 @@ recipeRouter.get('/api/recipes/:rkey', async (req, res) => {
       .executeTakeFirst()
 
     if (!recipeIndex) {
-      console.log('❌ Recipe not found:', rkey)
       return res.status(404).json({ error: 'Recipe not found' })
     }
 
-    console.log('✅ Recipe index found:', recipeIndex.title)
-
-    console.log('🔄 Attempting to fetch from PDS...')
     try {
       const { AtpAgent } = await import('@atproto/api')
       
@@ -107,7 +99,6 @@ recipeRouter.get('/api/recipes/:rkey', async (req, res) => {
       const did = uriParts[2]
       const collection = uriParts[3]
 
-      console.log('📍 PDS request:', { did, collection, rkey })
 
       const agent = new AtpAgent({ service: 'https://bsky.social' })
       
@@ -117,11 +108,7 @@ recipeRouter.get('/api/recipes/:rkey', async (req, res) => {
         rkey: rkey,
       })
 
-      console.log('✅ PDS response received')
       const record = recordResponse.data.value as any
-
-      console.log('✅ Full record fetched from PDS')
-      console.log('📦 Raw steps from PDS:', JSON.stringify(record.steps?.[0], null, 2))
 
       let authorProfile = null
 
@@ -146,7 +133,6 @@ recipeRouter.get('/api/recipes/:rkey', async (req, res) => {
             avatar: profileData.avatar || null,
           }
 
-          console.log('✅ Author profile fetched:', authorProfile)
         } else {
           console.error('⚠️ Failed to fetch profile, status:', profileResponse.status)
         }
@@ -163,9 +149,8 @@ recipeRouter.get('/api/recipes/:rkey', async (req, res) => {
           if (cid) {
             const cidString = typeof cid === 'string' ? cid : cid.toString()
             imageUrl = `https://cdn.bsky.app/img/feed_fullsize/plain/${did}/${cidString}@jpeg`
-            console.log(`🖼️ Step ${index + 1} image converted: ${imageUrl}`)
           } else {
-            console.log(`⚠️ Step ${index + 1} has image but no CID found:`, step.image)
+            console.error(`⚠️ Step ${index + 1} has image but no CID found:`, step.image)
           }
         }
         
@@ -176,7 +161,6 @@ recipeRouter.get('/api/recipes/:rkey', async (req, res) => {
         }
       })
 
-      console.log('📤 Sending steps:', JSON.stringify(stepsWithUrls[0], null, 2))
 
       let thumbnailUrl = recipeIndex.thumbnail_url
       if (!thumbnailUrl && record.thumbnail) {
@@ -189,7 +173,6 @@ recipeRouter.get('/api/recipes/:rkey', async (req, res) => {
       }
 
       const cookTime = formatCookTimeMinutes(recipeIndex.cook_time_minutes as number)
-      console.log('🔍 [API Detail] cook_time_minutes:', recipeIndex.cook_time_minutes, '→', cookTime)
 
       res.json({
         ...recipeIndex,
