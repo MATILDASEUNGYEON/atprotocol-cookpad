@@ -11,6 +11,7 @@ interface RecipeDetailActionsProps {
   onAddToFolder: () => void
   onShare: () => void
   onDelete: () => void
+  onEdit: () => void
 }
 
 export default function RecipeDetailActions({
@@ -23,7 +24,8 @@ export default function RecipeDetailActions({
   onSave,
   onAddToFolder,
   onShare,
-  onDelete
+  onDelete,
+  onEdit
 }: RecipeDetailActionsProps) {
   return (
     <div className="recipe-detail-actions">
@@ -44,7 +46,7 @@ export default function RecipeDetailActions({
       <div className="main-actions">
         {isOwner ? (
           <>
-            <button className="main-action-btn edit-btn">
+            <button className="main-action-btn edit-btn" onClick={onEdit}>
               ✏️ Edit recipe
             </button>
 
@@ -95,7 +97,7 @@ export default function RecipeDetailActions({
             </button>
 
             <button className="main-action-btn report-btn">
-              🚨 Report Recipe
+              🚨 Report
             </button>
           </>
         )}

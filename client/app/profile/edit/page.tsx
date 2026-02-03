@@ -10,41 +10,92 @@ import '../../styles/profile-edit.css'
 export default function ProfileEditPage() {
   const router = useRouter()
   const { userInfo, getInitials } = useAuth()
-  
+  const [isLoading, setIsLoading] = useState(false)
+
   const [formData, setFormData] = useState({
     name: '',
     cookpadId: '',
     location: '',
-    bio: ''
+    bio: '',
   })
 
   useEffect(() => {
-    if (userInfo) {
-      setFormData({
-        name: userInfo.displayName || userInfo.handle.split('.')[0] || '',
-        cookpadId: userInfo.handle || '',
-        location: '',
-        bio: ''
-      })
+    const fetchProfile = async () => {
+      if (!userInfo) return
+
+      try {
+        // PDS에서 실제 프로필 정보 가져오기
+        const res = await fetch('/api/me')
+        if (res.ok) {
+          const profile = await res.json()
+          console.log('📖 PDS에서 가져온 프로필:', profile)
+          
+          setFormData({
+            name: profile.displayName || userInfo.handle.split('.')[0] || '',
+            cookpadId: userInfo.handle || '',
+            location: localStorage.getItem('userLocation') || '',
+            bio: profile.description || '',
+          })
+        } else {
+          // API 실패 시 localStorage 사용
+          setFormData({
+            name: userInfo.displayName || userInfo.handle.split('.')[0] || '',
+            cookpadId: userInfo.handle || '',
+            location: localStorage.getItem('userLocation') || '',
+            bio: localStorage.getItem('userBio') || '',
+          })
+        }
+      } catch (err) {
+        console.error('프로필 로드 실패:', err)
+        setFormData({
+          name: userInfo.displayName || userInfo.handle.split('.')[0] || '',
+          cookpadId: userInfo.handle || '',
+          location: localStorage.getItem('userLocation') || '',
+          bio: localStorage.getItem('userBio') || '',
+        })
+      }
     }
+
+    fetchProfile()
   }, [userInfo])
 
-  const handleUpdate = () => {
-    if (formData.name) {
-      localStorage.setItem('userDisplayName', formData.name)
+  const handleUpdate = async () => {
+    if (!formData.name.trim()) {
+      alert('이름을 입력해주세요.')
+      return
     }
-    if (formData.location) {
-      localStorage.setItem('userLocation', formData.location)
+
+    setIsLoading(true)
+
+    try {
+      const res = await fetch('/api/profile/update', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: formData.name,
+          bio: formData.bio,
+        }),
+      })
+
+      if (!res.ok) {
+        const error = await res.json()
+        throw new Error(error.error || 'Update failed')
+      }
+
+      if (formData.name) localStorage.setItem('userDisplayName', formData.name)
+      if (formData.location) localStorage.setItem('userLocation', formData.location)
+      if (formData.bio) localStorage.setItem('userBio', formData.bio)
+
+      alert('프로필이 업데이트되었습니다.')
+      
+      // 페이지 새로고침으로 useAuth가 업데이트된 정보를 다시 읽도록 함
+      window.location.href = '/profile'
+    } catch (err) {
+      console.error('프로필 업데이트 실패:', err)
+      alert(err instanceof Error ? err.message : '프로필 업데이트에 실패했습니다.')
+    } finally {
+      setIsLoading(false)
     }
-    if (formData.bio) {
-      localStorage.setItem('userBio', formData.bio)
-    }
-    
-    // TODO: API 연동
-    console.log('Update profile:', formData)
-    alert('프로필이 업데이트되었습니다.')
-    
-    window.location.href = '/profile'
   }
 
   const handleCancel = () => {
@@ -52,10 +103,10 @@ export default function ProfileEditPage() {
   }
 
   return (
-    <div className='home-layout'>
+    <div className="home-layout">
       <Sidebar />
 
-      <div className='main-content'>
+      <div className="main-content">
         <Suspense fallback={<div>Loading...</div>}>
           <Header />
         </Suspense>
@@ -66,69 +117,90 @@ export default function ProfileEditPage() {
           </button>
 
           <div className="edit-form">
+            {/* Avatar */}
             <div className="avatar-section">
               <div className="edit-avatar">
                 <span>{userInfo ? getInitials(userInfo.handle) : 'U'}</span>
                 <div className="avatar-edit-icons">
                   <button className="avatar-edit-btn" title="Change Photo">
-                    <span>📷</span>
+                    📷
                   </button>
                   <button className="avatar-edit-btn" title="Delete Photo">
-                    <span>🗑️</span>
+                    🗑️
                   </button>
                 </div>
               </div>
             </div>
 
+            {/* Name */}
             <div className="form-group">
               <label className="form-label">Name</label>
               <input
                 type="text"
                 className="form-input"
                 value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, name: e.target.value })
+                }
               />
             </div>
 
+            {/* Bluesky ID */}
             <div className="form-group">
               <label className="form-label">Bluesky ID</label>
-              <div className="input-with-action">
-                <input
-                  type="text"
-                  className="form-input"
-                  value={`@${formData.cookpadId}`}
-                  disabled
-                />
-              </div>
+              <input
+                type="text"
+                className="form-input"
+                value={`@${formData.cookpadId}`}
+                disabled
+              />
             </div>
 
+            {/* Location */}
             <div className="form-group">
               <label className="form-label">Location</label>
               <input
                 type="text"
                 className="form-input"
                 value={formData.location}
-                onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, location: e.target.value })
+                }
                 placeholder="Location"
               />
             </div>
 
+            {/* Bio */}
             <div className="form-group">
-              <label className="form-label">About you and your love of cooking</label>
+              <label className="form-label">
+                About you and your love of cooking
+              </label>
               <textarea
                 className="form-textarea"
                 value={formData.bio}
-                onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, bio: e.target.value })
+                }
                 placeholder="Bio"
                 rows={1}
               />
             </div>
 
+            {/* Actions */}
             <div className="form-actions">
-              <button className="update-btn" onClick={handleUpdate}>
-                Update
+              <button
+                className="update-btn"
+                onClick={handleUpdate}
+                disabled={isLoading}
+              >
+                {isLoading ? '업데이트 중...' : 'Update'}
               </button>
-              <button className="cancel-btn" onClick={handleCancel}>
+
+              <button
+                className="cancel-btn"
+                onClick={handleCancel}
+                disabled={isLoading}
+              >
                 Cancel
               </button>
             </div>

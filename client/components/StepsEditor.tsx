@@ -69,18 +69,61 @@ export default function StepsEditor({ recipe, setRecipe }: Props) {
     setDraggedIndex(null)
   }
 
+  const parseCookTime = (cookTime: string) => {
+    const hourMatch = cookTime.match(/(\d+)hr/)
+    const minMatch = cookTime.match(/(\d+)mins?/)
+    return {
+      hours: hourMatch ? parseInt(hourMatch[1]) : 0,
+      minutes: minMatch ? parseInt(minMatch[1]) : 0
+    }
+  }
+
+  const { hours, minutes } = parseCookTime(recipe.cookTime)
+
+  const handleHoursChange = (value: string) => {
+    const h = parseInt(value) || 0
+    const cookTime = h > 0 || minutes > 0 
+      ? `${h > 0 ? `${h}hr ` : ''}${minutes > 0 ? `${minutes}mins` : ''}`.trim()
+      : ''
+    console.log('🔍 [StepsEditor] Hours changed - Setting cookTime:', cookTime)
+    setRecipe(r => ({ ...r, cookTime }))
+  }
+
+  const handleMinutesChange = (value: string) => {
+    const m = parseInt(value) || 0
+    const cookTime = hours > 0 || m > 0
+      ? `${hours > 0 ? `${hours}hr ` : ''}${m > 0 ? `${m}mins` : ''}`.trim()
+      : ''
+    console.log('🔍 [StepsEditor] Minutes changed - Setting cookTime:', cookTime)
+    setRecipe(r => ({ ...r, cookTime }))
+  }
+
   return (
     <div className="steps-section">
       <h2>Steps</h2>
       
       <div className="cook-time-input">
         <label>Cook time</label>
-        <input
-          type="text"
-          placeholder="1hr 30 mins"
-          value={recipe.cookTime}
-          onChange={(e) => setRecipe(r => ({ ...r, cookTime: e.target.value }))}
-        />
+        <div className="time-inputs">
+          <input
+            type="number"
+            min="0"
+            max="24"
+            value={hours || ""}
+            onChange={(e) => handleHoursChange(e.target.value)}
+            placeholder="HH"
+          />
+          <span>:</span>
+          <input
+            type="number"
+            min="0"
+            max="59"
+            step="10"
+            value={minutes || ""}
+            onChange={(e) => handleMinutesChange(e.target.value)}
+            placeholder="MM"
+          />
+        </div>
       </div>
 
       {recipe.steps.map((step, index) => (
@@ -127,7 +170,7 @@ export default function StepsEditor({ recipe, setRecipe }: Props) {
               }}
             />
             {step.image ? (
-              <img src={URL.createObjectURL(step.image)} alt={`Step ${index + 1}`} />
+              <img src={typeof step.image === 'string' ? step.image : URL.createObjectURL(step.image)} alt={`Step ${index + 1}`} />
             ) : (
               <div className="image-placeholder">
                 <span>📷</span>

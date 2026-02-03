@@ -1,6 +1,7 @@
 'use client'
 
 import { Suspense, useState, useEffect } from 'react'
+import { ClipLoader } from 'react-spinners'
 import Header from '@/components/header'
 import Sidebar from '@/components/Sidebar'
 import { useAuth } from '@/hooks/useAuth'
@@ -13,7 +14,6 @@ export default function ProfilePage() {
   const [recipes, setRecipes] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
 
-  // 내 레시피 불러오기
   useEffect(() => {
     async function fetchMyRecipes() {
       if (!userInfo?.did) return
@@ -43,8 +43,8 @@ export default function ProfilePage() {
         <Sidebar />
         <div className='main-content'>
           <Header />
-          <div className="profile-container">
-            <div className="loading-state">로딩 중...</div>
+          <div className="profile-container loading">
+            <ClipLoader size={36} color="#ff6b35" />
           </div>
         </div>
       </div>
@@ -76,7 +76,6 @@ export default function ProfilePage() {
                 <span className="stat"><strong>0</strong> Following</span>
                 <span className="stat"><strong>0</strong> Followers</span>
             </div>
-            {/* <button className="edit-profile-btn">Edit Profile</button> */}
             <button 
                 className="edit-profile-btn"
                 onClick={() => window.location.href = '/profile/edit'}
@@ -137,7 +136,6 @@ export default function ProfilePage() {
             key={recipe.uri} 
             className="recipe-item"
             onClick={() => {
-              // URI에서 rkey 추출: at://did/collection/rkey
               const rkey = recipe.uri.split('/').pop()
               window.location.href = `/recipe/${rkey}`
             }}
@@ -163,7 +161,7 @@ export default function ProfilePage() {
               <div className="recipe-meta">
                 {recipe.cook_time_minutes && (
                   <span className="meta-item">
-                    ⏱️ {recipe.cook_time_minutes}분
+                    ⏱️ {recipe.cook_time_minutes}
                   </span>
                 )}
                 {recipe.servings && (

@@ -14,19 +14,18 @@ export type AuthSession = {
   session: string
 }
 
-// AppView용 Recipe 인덱스 테이블
 export type Recipe = {
-  uri: string              // at://did:plc:xxx/com.cookpad.recipe/3kabc
-  cid: string              // record의 content hash
-  author_did: string       // 작성자 DID
+  uri: string             
+  cid: string              
+  author_did: string       
   title: string
   description?: string
   servings?: number
   cook_time_minutes?: number
-  thumbnail_url?: string   // blob URL
-  tags: string             // JSON string (SQLite는 배열을 직접 저장 불가)
+  thumbnail_url?: string   
+  tags: string             
   visibility: 'draft' | 'published'
-  created_at: string       // ISO timestamp
-  indexed_at: string       // AppView에 인덱싱된 시간
+  created_at: string      
+  indexed_at: string       
 }
 

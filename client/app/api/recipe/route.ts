@@ -17,6 +17,16 @@ export async function POST(req: NextRequest) {
     const description = formData.get('description') as string
     const serves = parseInt(formData.get('serves') as string)
     const cookTime = formData.get('cookTime') as string
+    
+    console.log('🔍 [API] Received cookTime from client:', cookTime, typeof cookTime)
+    
+    // Parse "1hr 30mins" to minutes
+    const hourMatch = cookTime.match(/(\d+)hr/)
+    const minMatch = cookTime.match(/(\d+)mins?/)
+    const cookTimeMinutes = (hourMatch ? parseInt(hourMatch[1]) * 60 : 0) + (minMatch ? parseInt(minMatch[1]) : 0)
+    
+    console.log('🔍 [API] Converted to cookTimeMinutes:', cookTimeMinutes, typeof cookTimeMinutes)
+    
     const ingredients = JSON.parse(formData.get('ingredients') as string)
     const tips = formData.get('tips') as string
     const status = formData.get('status') as string
@@ -64,7 +74,7 @@ export async function POST(req: NextRequest) {
       title,
       description,
       servings: serves,
-      cookTimeMinutes: parseInt(cookTime) || 0,
+      cookTimeMinutes,
       ingredients: ingredients.map((ing: any) => ({
         type: ing.section ? 'section' : 'ingredient',
         name: ing.section ? undefined : ing.name,

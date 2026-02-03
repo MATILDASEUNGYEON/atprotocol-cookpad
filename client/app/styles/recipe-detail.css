@@ -1,5 +1,59 @@
 /* Recipe Detail Page Styles */
 
+/* Back Button */
+
+.recipe-detail-back-button {
+  padding: 20px 40px 0;
+}
+
+.back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  /* margin-bottom: 1.5rem; */
+  background: white;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.back-button:hover {
+  background: #f8f8f8;
+  border-color: #ff6b35;
+  color: #ff6b35;
+  transform: translateX(-4px);
+}
+
+.back-icon {
+  font-size: 1.25rem;
+  line-height: 1;
+  transition: transform 0.2s ease;
+}
+
+.back-button:hover .back-icon {
+  transform: translateX(-2px);
+}
+
+.back-text {
+  line-height: 1;
+}
+.profile-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.profile-container.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+}
 .recipe-detail-layout {
   display: grid;
   grid-template-columns: 1fr 1fr;

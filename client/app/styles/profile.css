@@ -4,6 +4,13 @@
   padding: 40px 20px;
 }
 
+.profile-container.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+}
+
 .profile-header {
   padding-bottom: 30px;
   border-bottom: 1px solid #e0e0e0;

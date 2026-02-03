@@ -19,7 +19,12 @@ export default function RecipeDetailHeader({
   author,
   status
 }: RecipeDetailHeaderProps) {
-  const { userInfo, getInitials } = useAuth()
+  const { getInitials } = useAuth()
+  
+  const getAuthorInitials = (handle: string) => {
+    return handle.split('.')[0].substring(0, 2).toUpperCase()
+  }
+  
   return (
     <div className="recipe-detail-header">
       <h1 className="recipe-title">{title}</h1>
@@ -31,13 +36,17 @@ export default function RecipeDetailHeader({
       <div className="recipe-author">
         <div className="user-menu-header">
           <div className="user-menu-avatar">
-            <span>{userInfo ? getInitials(userInfo.handle) : 'U'}</span>
+            {author.avatar ? (
+              <img src={author.avatar} alt={author.handle} />
+            ) : (
+              <span>{getAuthorInitials(author.handle)}</span>
+            )}
           </div>
           <div className="user-menu-info">
             <div className="user-menu-name">
-              {userInfo?.displayName || userInfo?.handle.split('.')[0] || 'User'}
+              {author.displayName || author.handle.split('.')[0] || 'User'}
             </div>
-            <div className="user-menu-handle">@{userInfo?.handle || 'user'}</div>
+            <div className="user-menu-handle">@{author.handle}</div>
           </div>
         </div>    
 

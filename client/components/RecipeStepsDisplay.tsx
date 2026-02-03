@@ -4,7 +4,7 @@ import Image from 'next/image'
 import { Step } from '@/types/recipe'
 
 interface RecipeStepsDisplayProps {
-  cookTimeMinutes: number
+  cookTimeMinutes: number | string
   steps: Step[]
 }
 
@@ -12,6 +12,9 @@ export default function RecipeStepsDisplay({
   cookTimeMinutes,
   steps
 }: RecipeStepsDisplayProps) {
+  
+  console.log('🔍 [RecipeStepsDisplay] Received cookTimeMinutes:', cookTimeMinutes, typeof cookTimeMinutes)
+  
   // 디버깅: steps 데이터 확인
   console.log('🔍 Steps data:', steps)
   
@@ -21,7 +24,7 @@ export default function RecipeStepsDisplay({
         <h2>Steps</h2>
         <div className="cook-time-info">
           <span className="icon">⏱️</span>
-          <span>{cookTimeMinutes} mins</span>
+          <span>{cookTimeMinutes || '0mins'}</span>
         </div>
       </div>
 

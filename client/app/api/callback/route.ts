@@ -20,6 +20,12 @@ export async function GET(req: NextRequest) {
     homeUrl.searchParams.set('login', 'success')
     homeUrl.searchParams.set('handle', profile.data.handle)
     homeUrl.searchParams.set('did', session.did)
+    if (profile.data.displayName) {
+      homeUrl.searchParams.set('displayName', profile.data.displayName)
+    }
+    if (profile.data.avatar) {
+      homeUrl.searchParams.set('avatar', profile.data.avatar)
+    }
 
     const response = NextResponse.redirect(homeUrl)
     

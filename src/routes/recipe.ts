@@ -3,6 +3,15 @@ import { db } from '../db/index'
 
 export const recipeRouter = Router()
 
+function formatCookTimeMinutes(minutes: number | null | undefined): string {
+  if (!minutes || minutes === 0) return ''
+  
+  const hours = Math.floor(minutes / 60)
+  const mins = minutes % 60
+  
+  return `${hours > 0 ? `${hours}hr ` : ''}${mins > 0 ? `${mins}mins` : ''}`.trim()
+}
+
 /**
  * 레시피 목록 조회 (AppView)
  * GET /api/recipes?visibility=published&limit=20
@@ -25,8 +34,13 @@ recipeRouter.get('/api/recipes', async (req, res) => {
         return res.status(404).json({ error: 'Recipe not found' })
       }
 
+      console.log('🔍 [API] cook_time_minutes from DB:', recipe.cook_time_minutes, typeof recipe.cook_time_minutes)
+      const cookTime = formatCookTimeMinutes(recipe.cook_time_minutes as number)
+      console.log('✅ [API] Formatted to:', cookTime)
+
       return res.json({
         ...recipe,
+        cook_time_minutes: cookTime,
         tags: JSON.parse(recipe.tags as unknown as string),
       })
     }
@@ -45,10 +59,15 @@ recipeRouter.get('/api/recipes', async (req, res) => {
     const recipes = await query.execute()
 
     res.json({
-      recipes: recipes.map(recipe => ({
-        ...recipe,
-        tags: JSON.parse(recipe.tags as unknown as string),
-      })),
+      recipes: recipes.map(recipe => {
+        const cookTime = formatCookTimeMinutes(recipe.cook_time_minutes as number)
+        console.log('🔍 [API] Recipe:', recipe.title, 'cook_time_minutes:', recipe.cook_time_minutes, '→', cookTime)
+        return {
+          ...recipe,
+          cook_time_minutes: cookTime,
+          tags: JSON.parse(recipe.tags as unknown as string),
+        }
+      }),
     })
   } catch (error) {
     console.error('❌ Failed to fetch recipes:', error)
@@ -67,7 +86,6 @@ recipeRouter.get('/api/recipes/:rkey', async (req, res) => {
 
     console.log('🔍 Fetching recipe by rkey:', rkey)
 
-    // 1. AppView DB에서 메타데이터 조회
     const recipeIndex = await db
       .selectFrom('recipe')
       .selectAll()
@@ -81,19 +99,16 @@ recipeRouter.get('/api/recipes/:rkey', async (req, res) => {
 
     console.log('✅ Recipe index found:', recipeIndex.title)
 
-    // 2. PDS에서 실제 record 가져오기
     console.log('🔄 Attempting to fetch from PDS...')
     try {
       const { AtpAgent } = await import('@atproto/api')
       
-      // URI 파싱: at://did/collection/rkey
       const uriParts = recipeIndex.uri.split('/')
       const did = uriParts[2]
       const collection = uriParts[3]
 
       console.log('📍 PDS request:', { did, collection, rkey })
 
-      // Public PDS endpoint로 record 조회 (인증 불필요)
       const agent = new AtpAgent({ service: 'https://bsky.social' })
       
       const recordResponse = await agent.com.atproto.repo.getRecord({
@@ -108,17 +123,44 @@ recipeRouter.get('/api/recipes/:rkey', async (req, res) => {
       console.log('✅ Full record fetched from PDS')
       console.log('📦 Raw steps from PDS:', JSON.stringify(record.steps?.[0], null, 2))
 
-      // Steps의 image blob을 URL로 변환
+      let authorProfile = null
+
+      try {
+        const profileUrl = `https://public.api.bsky.app/xrpc/app.bsky.actor.getProfile?actor=${did}`
+        const profileResponse = await fetch(profileUrl)
+
+        if (profileResponse.ok) {
+          const profileData = await profileResponse.json()
+
+          const handle = profileData.handle
+
+          const defaultDisplayName =
+            handle
+              ?.replace(/^@/, '')  
+              ?.split('.')[0]     
+              ?? 'user'
+
+          authorProfile = {
+            handle,
+            displayName: profileData.displayName || defaultDisplayName,
+            avatar: profileData.avatar || null,
+          }
+
+          console.log('✅ Author profile fetched:', authorProfile)
+        } else {
+          console.error('⚠️ Failed to fetch profile, status:', profileResponse.status)
+        }
+      } catch (profileError) {
+        console.error('⚠️ Failed to fetch author profile:', profileError)
+      }
+
       const stepsWithUrls = (record.steps || []).map((step: any, index: number) => {
         let imageUrl = undefined
         
         if (step.image) {
-          // step.image가 BlobRef 객체인 경우
-          // step.image.ref가 CID 객체이므로 직접 toString() 호출
           let cid = step.image.ref
           
           if (cid) {
-            // CID 객체를 문자열로 변환
             const cidString = typeof cid === 'string' ? cid : cid.toString()
             imageUrl = `https://cdn.bsky.app/img/feed_fullsize/plain/${did}/${cidString}@jpeg`
             console.log(`🖼️ Step ${index + 1} image converted: ${imageUrl}`)
@@ -136,7 +178,6 @@ recipeRouter.get('/api/recipes/:rkey', async (req, res) => {
 
       console.log('📤 Sending steps:', JSON.stringify(stepsWithUrls[0], null, 2))
 
-      // Thumbnail URL도 blob reference에서 변환
       let thumbnailUrl = recipeIndex.thumbnail_url
       if (!thumbnailUrl && record.thumbnail) {
         let cid = record.thumbnail.ref
@@ -147,23 +188,31 @@ recipeRouter.get('/api/recipes/:rkey', async (req, res) => {
         }
       }
 
-      // 3. AppView 메타데이터 + PDS record 조합
+      const cookTime = formatCookTimeMinutes(recipeIndex.cook_time_minutes as number)
+      console.log('🔍 [API Detail] cook_time_minutes:', recipeIndex.cook_time_minutes, '→', cookTime)
+
       res.json({
         ...recipeIndex,
+        cook_time_minutes: cookTime,
         thumbnail_url: thumbnailUrl,
         tags: JSON.parse(recipeIndex.tags as unknown as string),
         ingredients: record.ingredients || [],
         steps: stepsWithUrls,
+        author_profile: authorProfile,
       })
     } catch (pdsError) {
       console.error('⚠️ Failed to fetch from PDS:', pdsError)
       console.error('Error details:', pdsError instanceof Error ? pdsError.message : String(pdsError))
-      // PDS 조회 실패 시 AppView 데이터만 반환
+
+      const cookTime = formatCookTimeMinutes(recipeIndex.cook_time_minutes as number)
+
       res.json({
         ...recipeIndex,
+        cook_time_minutes: cookTime,
         tags: JSON.parse(recipeIndex.tags as unknown as string),
         ingredients: [],
         steps: [],
+        author_profile: null,
       })
     }
   } catch (error) {
@@ -194,6 +243,7 @@ recipeRouter.get('/api/recipes/my', async (req, res) => {
     res.json({
       recipes: recipes.map(recipe => ({
         ...recipe,
+        cook_time_minutes: formatCookTimeMinutes(recipe.cook_time_minutes as number),
         tags: JSON.parse(recipe.tags as unknown as string),
       })),
     })

@@ -17,13 +17,12 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn('servings', 'integer')
     .addColumn('cook_time_minutes', 'integer')
     .addColumn('thumbnail_url', 'varchar')
-    .addColumn('tags', 'text') // JSON array를 string으로 저장
+    .addColumn('tags', 'text')
     .addColumn('visibility', 'varchar', (col) => col.notNull().defaultTo('published'))
     .addColumn('created_at', 'varchar', (col) => col.notNull())
     .addColumn('indexed_at', 'varchar', (col) => col.notNull())
     .execute()
 
-  // 검색 성능을 위한 인덱스
   await db.schema
     .createIndex('recipe_author_did_idx')
     .on('recipe')

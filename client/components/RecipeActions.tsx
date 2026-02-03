@@ -16,42 +16,6 @@ export default function RecipeActions({ recipe }: Props) {
     }
   }
 
-  const handleSaveAndClose = async () => {
-    try {
-      const formData = new FormData()
-      
-      if (recipe.thumbnail) {
-        formData.append('thumbnail', recipe.thumbnail)
-      }
-      
-      formData.append('title', recipe.title)
-      formData.append('description', recipe.description)
-      formData.append('serves', recipe.serves.toString())
-      formData.append('cookTime', recipe.cookTime)
-      formData.append('ingredients', JSON.stringify(recipe.ingredients))
-      formData.append('tips', recipe.tips)
-      formData.append('status', 'draft')
-
-      recipe.steps.forEach((step, index) => {
-        if (step.image) {
-          formData.append(`step_${index}_image`, step.image)
-        }
-        formData.append(`step_${index}_description`, step.description)
-      })
-
-      // const response = await fetch('/api/recipes', {
-      //   method: 'POST',
-      //   body: formData,
-      // })
-
-      alert('Recipe saved as draft!')
-      router.push('/profile') // Redirect to profile/my recipes
-    } catch (error) {
-      console.error('Failed to save recipe:', error)
-      alert('Failed to save recipe')
-    }
-  }
-
   const handlePublish = async () => {
     if (!recipe.title.trim()) {
       alert('Please enter a title')
@@ -61,6 +25,8 @@ export default function RecipeActions({ recipe }: Props) {
     try {
       const formData = new FormData()
 
+      console.log('🔍 [RecipeActions] Sending recipe.cookTime to API:', recipe.cookTime, typeof recipe.cookTime)
+      
       formData.append('title', recipe.title)
       formData.append('description', recipe.description)
       formData.append('serves', String(recipe.serves))
@@ -99,7 +65,7 @@ export default function RecipeActions({ recipe }: Props) {
       }
 
       alert('Recipe published!')
-      router.push('/')
+      router.push('/profile')
     } catch (err) {
       console.error(err)
       alert('Failed to publish recipe')
@@ -111,9 +77,6 @@ export default function RecipeActions({ recipe }: Props) {
     <div className="recipe-actions">
       <button className="delete-button" onClick={handleDelete}>
         🗑️ Delete
-      </button>
-      <button className="save-button" onClick={handleSaveAndClose}>
-        Save and Close
       </button>
       <button className="publish-button" onClick={handlePublish}>
         Publish

@@ -62,7 +62,9 @@ export default function HomePage() {
               <span className="update-time">Updated 9:02 PM</span>
             </div>
             <div className="ingredients-grid">
-              <div className="ingredient-card">Salmon</div>
+              <div className="ingredient-card"
+                onClick={() => window.location.href = 'list'}
+              >전체 레시피 확인</div>
               <div className="ingredient-card">Chicken Breast</div>
               <div className="ingredient-card">Pork Chops</div>
               <div className="ingredient-card">Bacon</div>

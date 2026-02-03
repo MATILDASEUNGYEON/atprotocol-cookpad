@@ -9,29 +9,58 @@ export function useAuth() {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    const checkLoginStatus = () => {
+    const checkLoginStatus = async () => {
       const cookies = document.cookie.split(';').map(cookie => cookie.trim())
       const didCookie = cookies.find(cookie => cookie.startsWith('did='))
       
       if (didCookie) {
         const did = didCookie.split('=')[1]
         const storedHandle = localStorage.getItem('userHandle')
-        const storedDisplayName = localStorage.getItem('userDisplayName')
-        const storedAvatar = localStorage.getItem('userAvatar')
         
+        // 먼저 localStorage의 정보로 초기화
         setIsLoggedIn(true)
         setUserInfo({
           did,
           handle: storedHandle || 'user',
-          displayName: storedDisplayName || undefined,
-          avatar: storedAvatar || undefined
+          displayName: localStorage.getItem('userDisplayName') || undefined,
+          avatar: localStorage.getItem('userAvatar') || undefined
         })
+        setIsLoading(false)
+
+        // PDS에서 최신 프로필 정보 가져오기
+        try {
+          const res = await fetch('/api/me')
+          if (res.ok) {
+            const profile = await res.json()
+            console.log('🔄 최신 프로필 정보 업데이트:', profile.displayName)
+            
+            // localStorage 업데이트
+            if (profile.displayName) {
+              localStorage.setItem('userDisplayName', profile.displayName)
+            }
+            if (profile.description) {
+              localStorage.setItem('userBio', profile.description)
+            }
+            if (profile.avatar) {
+              localStorage.setItem('userAvatar', profile.avatar)
+            }
+            
+            // 상태 업데이트
+            setUserInfo({
+              did,
+              handle: profile.handle || storedHandle || 'user',
+              displayName: profile.displayName || undefined,
+              avatar: profile.avatar || undefined
+            })
+          }
+        } catch (err) {
+          console.error('프로필 정보 가져오기 실패:', err)
+        }
       } else {
         setIsLoggedIn(false)
         setUserInfo(null)
+        setIsLoading(false)
       }
-      
-      setIsLoading(false)
     }
 
     checkLoginStatus()
@@ -41,16 +70,29 @@ export function useAuth() {
       const loginSuccess = params.get('login')
       const handle = params.get('handle')
       const did = params.get('did')
+      const displayName = params.get('displayName')
+      const avatar = params.get('avatar')
       
       if (loginSuccess === 'success' && handle && did) {
         localStorage.setItem('userHandle', handle)
+        if (displayName) {
+          localStorage.setItem('userDisplayName', displayName)
+        }
+        if (avatar) {
+          localStorage.setItem('userAvatar', avatar)
+        }
         
         const expires = new Date()
         expires.setDate(expires.getDate() + 7)
         document.cookie = `did=${did}; expires=${expires.toUTCString()}; path=/; SameSite=Lax`
         
         setIsLoggedIn(true)
-        setUserInfo({ did, handle })
+        setUserInfo({ 
+          did, 
+          handle,
+          displayName: displayName || undefined,
+          avatar: avatar || undefined
+        })
         setIsLoading(false)
         
         window.history.replaceState({}, '', window.location.pathname)
