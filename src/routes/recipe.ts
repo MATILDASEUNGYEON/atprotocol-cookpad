@@ -235,3 +235,46 @@ recipeRouter.get('/api/recipes/my', async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch recipes' })
   }
 })
+
+/**
+ * 태그 기반 레시피 검색
+ * GET /api/recipes/by-tag/:prefix/:value
+ * 예: /api/recipes/by-tag/ingredient/butter
+ */
+recipeRouter.get('/api/recipes/by-tag/:prefix/:value', async (req, res) => {
+  try {
+    const { prefix, value } = req.params
+    const tag = `${prefix}:${value}`
+    const limit = parseInt(req.query.limit as string) || 50
+
+    console.log(`🔍 Searching recipes with tag: ${tag}`)
+
+    // JSON 배열 내부에서 태그 검색
+    const recipes = await db
+      .selectFrom('recipe')
+      .selectAll()
+      .where('tags', 'like', `%"${tag}"%`)
+      .where('visibility', '=', 'published')
+      .orderBy('created_at', 'desc')
+      .limit(limit)
+      .execute()
+
+    console.log(`✅ Found ${recipes.length} recipes with tag: ${tag}`)
+
+    res.json({
+      tag,
+      count: recipes.length,
+      recipes: recipes.map(recipe => {
+        const cookTime = formatCookTimeMinutes(recipe.cook_time_minutes as number)
+        return {
+          ...recipe,
+          cook_time_minutes: cookTime,
+          tags: JSON.parse(recipe.tags as unknown as string),
+        }
+      }),
+    })
+  } catch (error) {
+    console.error('❌ Failed to search recipes by tag:', error)
+    res.status(500).json({ error: 'Failed to search recipes' })
+  }
+})

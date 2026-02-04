@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSessionAgent } from '@/lib/agent'
+import { generateTags } from '@/lib/tags'
 
 export async function POST(req: NextRequest) {
   try {
@@ -70,6 +71,19 @@ export async function POST(req: NextRequest) {
 
     console.log('📝 Creating recipe record on PDS...')
     
+    // 자동 태그 생성
+    const autoTags = generateTags(
+      ingredients.map((ing: any) => ({
+        type: ing.section ? 'section' : 'ingredient',
+        name: ing.section ? undefined : ing.name,
+        title: ing.section || undefined
+      })),
+      title,
+      description
+    )
+    
+    console.log('🏷️ Generated tags:', autoTags)
+    
     const recipeRecord = {
       title,
       description,
@@ -82,7 +96,7 @@ export async function POST(req: NextRequest) {
       })),
       steps: stepsWithBlobs,
       thumbnail: thumbnailBlob,
-      tags: [],
+      tags: autoTags,
       visibility: status === 'published' ? 'published' : 'draft',
       $type: 'com.cookpad.recipe'
     }

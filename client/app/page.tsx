@@ -52,7 +52,34 @@ export default function HomePage() {
           <section className="category-section">
             <h3>Quick & Easy</h3>
             <div className="category-grid">
-              <div className="category-placeholder">Category items will go here</div>
+              <div 
+                className="category-placeholder"
+                onClick={() => window.location.href = '/search/attribute-quick'}
+                style={{ cursor: 'pointer' }}
+              >
+                ⚡ Quick & Easy Recipes
+              </div>
+              <div 
+                className="category-placeholder"
+                onClick={() => window.location.href = '/search/attribute-dessert'}
+                style={{ cursor: 'pointer' }}
+              >
+                🍰 Dessert
+              </div>
+              <div 
+                className="category-placeholder"
+                onClick={() => window.location.href = '/search/attribute-vegan'}
+                style={{ cursor: 'pointer' }}
+              >
+                🌱 Vegan
+              </div>
+              <div 
+                className="category-placeholder"
+                onClick={() => window.location.href = '/search/attribute-spicy'}
+                style={{ cursor: 'pointer' }}
+              >
+                🌶️ Spicy
+              </div>
             </div>
           </section>
 
@@ -73,14 +100,34 @@ export default function HomePage() {
 
           <section className="dishes-section">
             <div className="section-header">
-              <h3>Popular Dishes</h3>
+              <h3>Explore by Cuisine</h3>
               <span className="update-time">Updated 8:51 PM</span>
             </div>
             <div className="dishes-grid">
-              <div className="dish-card">Soup</div>
-              <div className="dish-card">Chili</div>
-              <div className="dish-card">Homemade Bread</div>
-              <div className="dish-card">Egg Noodle Soup</div>
+              <div className="dish-card" onClick={() => window.location.href = '/search/cuisine-korean'}>
+                🇰🇷 Korean
+              </div>
+              <div className="dish-card" onClick={() => window.location.href = '/search/cuisine-italian'}>
+                🇮🇹 Italian
+              </div>
+              <div className="dish-card" onClick={() => window.location.href = '/search/cuisine-japanese'}>
+                🇯🇵 Japanese
+              </div>
+              <div className="dish-card" onClick={() => window.location.href = '/search/cuisine-chinese'}>
+                🇨🇳 Chinese
+              </div>
+              <div className="dish-card" onClick={() => window.location.href = '/search/cuisine-mexican'}>
+                🇲🇽 Mexican
+              </div>
+              <div className="dish-card" onClick={() => window.location.href = '/search/cuisine-french'}>
+                🇫🇷 French
+              </div>
+              <div className="dish-card" onClick={() => window.location.href = '/search/cuisine-indian'}>
+                🇮🇳 Indian
+              </div>
+              <div className="dish-card" onClick={() => window.location.href = '/search/cuisine-thai'}>
+                🇹🇭 Thai
+              </div>
             </div>
           </section>
         </main>

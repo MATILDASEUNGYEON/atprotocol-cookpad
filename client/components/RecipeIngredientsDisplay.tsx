@@ -1,6 +1,8 @@
 'use client'
 
+import Link from 'next/link'
 import { IngredientItem } from '@/types/recipe'
+import { normalizeIngredient } from '@/lib/tags'
 
 interface RecipeIngredientsDisplayProps {
   serves: number
@@ -33,7 +35,17 @@ export default function RecipeIngredientsDisplay({
 
           return (
             <div key={item.id} className="ingredient-item">
-              <span className="ingredient-name">{item.name}</span>
+              <Link 
+                href={`/search/ingredient-${normalizeIngredient(item.name || '')}`}
+                className="ingredient-link"
+                style={{
+                  textDecoration: 'underline',
+                  color: 'inherit',
+                  cursor: 'pointer'
+                }}
+              >
+                {item.name}
+              </Link>
             </div>
           )
         })}

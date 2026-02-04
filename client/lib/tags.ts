@@ -1,0 +1,144 @@
+/**
+ * 태그 생성 및 정규화 유틸리티
+ * ATProtocol 레시피 레코드에서 자동으로 태그를 추출
+ */
+
+/**
+ * 재료명 정규화
+ * 수량/단위 제거하고 소문자로 변환
+ * 
+ * @example
+ * normalizeIngredient("150 g marshmallows") → "marshmallows"
+ * normalizeIngredient("2 cups butter") → "butter"
+ */
+export function normalizeIngredient(name: string): string {
+  return name
+    .replace(/^\d+(\.\d+)?(\s*\/\s*\d+)?\s*(g|ml|kg|oz|cup|cups|tbsp|tsp|lb|lbs|l)?\s*/i, '')
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9가-힣\s]/g, '')
+    .replace(/\s+/g, '_')
+}
+
+/**
+ * 재료 배열에서 자동으로 태그 생성
+ * - ingredient: 각 재료
+ * - cuisine: 요리 스타일 추론 (규칙 기반)
+ * - attribute: 속성 추론 (vegan, spicy 등)
+ */
+export function generateTags(
+  ingredients: Array<{ type: string; name?: string; title?: string }>,
+  title: string,
+  description?: string
+): string[] {
+  const tags: string[] = []
+  
+  ingredients
+    .filter(ing => ing.type === 'ingredient' && ing.name)
+    .forEach(ing => {
+      const normalized = normalizeIngredient(ing.name!)
+      if (normalized) {
+        tags.push(`ingredient:${normalized}`)
+      }
+    })
+  
+  // 2. Cuisine 태그 추론 (제목 + 설명 기반)
+  const text = `${title} ${description || ''}`.toLowerCase()
+  
+  const cuisinePatterns = [
+    { pattern: /(김치|된장|고추장|간장|한식|korean|bibimbap|bulgogi|kimchi|doenjang|gochujang)/i, tag: 'korean' },
+    { pattern: /(pasta|pizza|risotto|italian|parmesan|mozzarella)/i, tag: 'italian' },
+    { pattern: /(sushi|ramen|tempura|japanese|miso|teriyaki|sake)/i, tag: 'japanese' },
+    { pattern: /(curry|indian|masala|tandoori|naan|biryani)/i, tag: 'indian' },
+    { pattern: /(taco|burrito|mexican|salsa|tortilla|enchilada)/i, tag: 'mexican' },
+    { pattern: /(croissant|french|baguette|crepe|quiche)/i, tag: 'french' },
+    { pattern: /(stir[- ]?fry|chinese|wok|dumpling|dim sum)/i, tag: 'chinese' },
+    { pattern: /(pad thai|thai|tom yum|green curry)/i, tag: 'thai' },
+  ]
+  
+  cuisinePatterns.forEach(({ pattern, tag }) => {
+    if (pattern.test(text)) {
+      tags.push(`cuisine:${tag}`)
+    }
+  })
+
+  const animalProducts = [
+    'meat', 'chicken', 'pork', 'beef', 'lamb', 'fish', 'seafood',
+    'egg', 'eggs', 'milk', 'cream', 'cheese', 'butter', 'yogurt',
+    '고기', '닭', '돼지', '소고기', '생선', '계란', '우유', '치즈', '버터'
+  ]
+  
+  const hasAnimalProduct = ingredients.some(ing => {
+    if (ing.type !== 'ingredient' || !ing.name) return false
+    const normalized = ing.name.toLowerCase()
+    return animalProducts.some(animal => normalized.includes(animal))
+  })
+  
+  if (!hasAnimalProduct && ingredients.length > 0) {
+    tags.push('attribute:vegan')
+  }
+  
+  const spicyIngredients = [
+    'chili', 'pepper', 'hot sauce', 'cayenne', 'jalapeño', 'gochugaru',
+    '고추', '고춧가루', '청양고추', '매운', 'spicy'
+  ]
+  
+  const isSpicy = ingredients.some(ing => {
+    if (ing.type !== 'ingredient' || !ing.name) return false
+    const normalized = ing.name.toLowerCase()
+    return spicyIngredients.some(spice => normalized.includes(spice))
+  }) || /spicy|매운/i.test(text)
+  
+  if (isSpicy) {
+    tags.push('attribute:spicy')
+  }
+  
+  const dessertIngredients = [
+    'sugar', 'chocolate', 'cocoa', 'vanilla', 'cream', 'flour',
+    'butter', 'egg', 'milk', 'honey', 'syrup',
+    '설탕', '초콜릿', '생크림', '밀가루', '꿀'
+  ]
+  
+  const isDessert = ingredients.some(ing => {
+    if (ing.type !== 'ingredient' || !ing.name) return false
+    const normalized = ing.name.toLowerCase()
+    return dessertIngredients.some(dessert => normalized.includes(dessert))
+  }) && /(dessert|cake|cookie|pie|tart|sweet|디저트|케이크|쿠키|파이)/i.test(text)
+  
+  if (isDessert) {
+    tags.push('attribute:dessert')
+  }
+  
+  if (/(quick|easy|simple|fast|간단|쉬운|빠른)/i.test(text)) {
+    tags.push('attribute:quick')
+  }
+  
+  return Array.from(new Set(tags))
+}
+
+/**
+ * 태그를 사람이 읽기 쉬운 형태로 변환
+ */
+export function formatTag(tag: string): string {
+  const [prefix, value] = tag.split(':')
+  
+  if (prefix === 'ingredient') {
+    return value.replace(/_/g, ' ')
+  }
+  
+  if (prefix === 'cuisine') {
+    return value.charAt(0).toUpperCase() + value.slice(1)
+  }
+  
+  if (prefix === 'attribute') {
+    const labels: Record<string, string> = {
+      vegan: 'Vegan',
+      spicy: 'Spicy',
+      dessert: 'Dessert',
+      quick: 'Quick & Easy'
+    }
+    return labels[value] || value
+  }
+  
+  return tag
+}
