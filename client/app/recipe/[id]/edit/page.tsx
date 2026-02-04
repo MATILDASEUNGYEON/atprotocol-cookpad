@@ -25,7 +25,6 @@ export default function RecipeEditPage({
     setSaving(true)
 
     try {
-      // Convert ingredients to API format
       const ingredientsFormatted = recipe.ingredients
         .filter(ing => {
           if (ing.type === 'section') return ing.title?.trim()
@@ -47,12 +46,12 @@ export default function RecipeEditPage({
           }
         })
 
-      // Convert steps to API format (keep original structure with image)
       const stepsFormatted = recipe.steps
         .filter(step => step.description.trim())
         .map(step => ({
+          id: step.id,
           text: step.description,
-          image: step.image || undefined
+          image: step.image
         }))
 
       console.log('📤 Sending update:', {
@@ -60,21 +59,35 @@ export default function RecipeEditPage({
         steps: stepsFormatted
       })
 
+      // Parse cookTime "1hr 30mins" format to minutes (same as upload)
+      const cookTime = recipe.cookTime
+      const hourMatch = cookTime.match(/(\d+)hr/)
+      const minMatch = cookTime.match(/(\d+)mins?/)
+      const cookTimeMinutes = (hourMatch ? parseInt(hourMatch[1]) * 60 : 0) + (minMatch ? parseInt(minMatch[1]) : 0)
+
+      const formData = new FormData()
+      formData.append('title', recipe.title)
+      formData.append('description', recipe.description)
+      formData.append('cook_time_minutes', String(cookTimeMinutes))
+      formData.append('servings', String(recipe.serves))
+      formData.append('ingredients', JSON.stringify(ingredientsFormatted))
+      formData.append('steps', JSON.stringify(stepsFormatted.map(s => ({ 
+        id: s.id, 
+        text: s.text,
+        existingImageUrl: typeof s.image === 'string' ? s.image : undefined
+      }))))
+      formData.append('thumbnail_url', typeof recipe.thumbnail === 'string' ? recipe.thumbnail : originalData?.thumbnail_url || '')
+
+      recipe.steps.forEach(step => {
+        if (step.image && step.image instanceof File) {
+          formData.append(`stepImage:${step.id}`, step.image)
+        }
+      })
+
       const res = await fetch(`/api/recipe/${params.id}`, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
         credentials: 'include',
-        body: JSON.stringify({
-          title: recipe.title,
-          description: recipe.description,
-          cook_time_minutes: recipe.cookTime ? parseInt(recipe.cookTime) : 0,
-          servings: recipe.serves,
-          ingredients: ingredientsFormatted,
-          steps: stepsFormatted,
-          thumbnail_url: typeof recipe.thumbnail === 'string' ? recipe.thumbnail : originalData?.thumbnail_url || '',
-        }),
+        body: formData,
       })
 
       if (!res.ok) {
@@ -84,7 +97,7 @@ export default function RecipeEditPage({
       }
 
       alert('레시피가 수정되었습니다.')
-      router.push(`/recipe/${params.id}`)
+      window.location.href = `/recipe/${params.id}`
     } catch (error) {
       console.error('Failed to update recipe:', error)
       alert('레시피 수정 중 오류가 발생했습니다.')

@@ -26,6 +26,7 @@ export async function GET(
     }
 
     const recipe = await response.json()
+    console.log('📖 [GET] Recipe steps from AppView:', JSON.stringify(recipe.steps, null, 2))
     return NextResponse.json(recipe)
 
   } catch (error) {
@@ -56,7 +57,17 @@ export async function PUT(
       )
     }
 
-    const body = await req.json()
+    const formData = await req.formData()
+    
+    const body = {
+      title: formData.get('title') as string,
+      description: formData.get('description') as string,
+      cook_time_minutes: parseInt(formData.get('cook_time_minutes') as string),
+      servings: parseInt(formData.get('servings') as string),
+      ingredients: JSON.parse(formData.get('ingredients') as string),
+      steps: JSON.parse(formData.get('steps') as string),
+      thumbnail_url: formData.get('thumbnail_url') as string
+    }
 
     console.log('✏️ Updating recipe:', { rkey, did })
     console.log('📥 Received data:', {
@@ -107,15 +118,28 @@ export async function PUT(
       }
     })
 
-    // Convert steps to PDS format, preserving image references
-    const stepsForPDS = (body.steps || []).map((step: any) => {
-      // If step has image URL, convert it back to blob reference format
+    // Convert steps to PDS format with image upload support
+    const stepsForPDS = await Promise.all((body.steps || []).map(async (step: any) => {
       let imageBlob = undefined
       
-      if (step.image) {
-        if (typeof step.image === 'string' && step.image.includes('cdn.bsky.app')) {
-          // Extract CID from URL
-          const match = step.image.match(/plain\/[^/]+\/([^@]+)/)
+      // Check if there's a new image file to upload
+      const stepImageFile = formData.get(`stepImage:${step.id}`) as File | null
+      
+      if (stepImageFile) {
+        // Upload new image
+        console.log(`📤 Uploading new image for step ${step.id}`)
+        const imageBytes = await stepImageFile.arrayBuffer()
+        const imageUpload = await agent.uploadBlob(
+          new Uint8Array(imageBytes),
+          { encoding: stepImageFile.type }
+        )
+        imageBlob = imageUpload.data.blob
+        console.log(`✅ Step ${step.id} image uploaded:`, imageBlob)
+      } else if (step.existingImageUrl) {
+        // Preserve existing image URL by converting to blob format
+        console.log(`♻️ Preserving existing image for step ${step.id}:`, step.existingImageUrl)
+        if (step.existingImageUrl.includes('cdn.bsky.app')) {
+          const match = step.existingImageUrl.match(/plain\/[^/]+\/([^@]+)/)
           if (match) {
             imageBlob = {
               $type: 'blob',
@@ -123,10 +147,8 @@ export async function PUT(
               mimeType: 'image/jpeg',
               size: 0
             }
+            console.log(`✅ Extracted blob reference:`, imageBlob)
           }
-        } else if (typeof step.image === 'object') {
-          // Already in blob format
-          imageBlob = step.image
         }
       }
 
@@ -134,7 +156,7 @@ export async function PUT(
         text: step.text,
         image: imageBlob
       }
-    })
+    }))
 
     console.log('📝 Formatted for PDS:', {
       ingredients: ingredientsForPDS,

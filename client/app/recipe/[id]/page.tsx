@@ -39,7 +39,20 @@ export default function RecipeDetailPage({ params }: RecipeDetailPageProps) {
         }
 
         const data = await response.json()
-        setRecipe(data)
+        
+        // Normalize steps data structure
+        const normalizedSteps = Array.isArray(data.steps)
+          ? data.steps.map((step: any) => ({
+              id: step.id || crypto.randomUUID(),
+              description: step.description || step.text || '',
+              image: step.image || null
+            }))
+          : []
+
+        setRecipe({
+          ...data,
+          steps: normalizedSteps
+        })
         setIsLiked(data.isLiked || false)
         setIsSaved(data.isBookmarked || false)
         setLikesCount(data.likesCount || 0)
@@ -121,7 +134,7 @@ export default function RecipeDetailPage({ params }: RecipeDetailPageProps) {
           <Header />
         </Suspense>
         <div className="recipe-detail-back-button">
-          <button className="back-button" onClick={() => window.history.back()}>
+          <button className="back-button" onClick={() => window.location.href = '/list'}>
               <span className="back-icon">←</span>
               <span className="back-text">Back to previous page</span>
           </button>

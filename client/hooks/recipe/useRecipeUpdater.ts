@@ -28,6 +28,7 @@ export function useRecipeUpdater(recipeId: string) {
         console.log('📥 Fetched recipe data:', data)
         console.log('📥 Raw ingredients:', data.ingredients)
         console.log('📥 Raw steps:', data.steps)
+        console.log('📥 FULL STEPS JSON:', JSON.stringify(data.steps, null, 2))
         setOriginalData(data)
 
         // Convert API data to RecipeDraft format
