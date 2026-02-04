@@ -25,13 +25,8 @@ export function useRecipeUpdater(recipeId: string) {
         }
 
         const data = await res.json()
-        console.log('📥 Fetched recipe data:', data)
-        console.log('📥 Raw ingredients:', data.ingredients)
-        console.log('📥 Raw steps:', data.steps)
-        console.log('📥 FULL STEPS JSON:', JSON.stringify(data.steps, null, 2))
         setOriginalData(data)
 
-        // Convert API data to RecipeDraft format
         const ingredients: IngredientItem[] = Array.isArray(data.ingredients) 
           ? data.ingredients.map((ing: string | any) => ({
               id: crypto.randomUUID(),
@@ -42,8 +37,6 @@ export function useRecipeUpdater(recipeId: string) {
 
         const steps: Step[] = Array.isArray(data.steps)
           ? data.steps.map((step: string | any, index: number) => {
-              console.log(`📝 Processing step ${index + 1}:`, step)
-              // Check if step is an object or string
               if (typeof step === 'string') {
                 return {
                   id: crypto.randomUUID(),
@@ -53,8 +46,6 @@ export function useRecipeUpdater(recipeId: string) {
               } else {
                 // Step is an object - prioritize 'text' field then 'description'
                 const description = step.text || step.description || ''
-                console.log(`   → Extracted description: "${description}"`)
-                console.log(`   → Image:`, step.image)
                 return {
                   id: crypto.randomUUID(),
                   description: description,
@@ -63,10 +54,6 @@ export function useRecipeUpdater(recipeId: string) {
               }
             })
           : []
-
-        console.log('🔄 Converted ingredients:', ingredients)
-        console.log('🔄 Converted steps:', steps)
-        console.log('🔄 Steps length:', steps.length)
 
         setRecipe({
           title: data.title || '',
@@ -79,8 +66,6 @@ export function useRecipeUpdater(recipeId: string) {
           status: 'published',
           thumbnail: data.thumbnail_url || null,
         })
-
-        console.log('✅ Recipe state set successfully')
 
         setLoading(false)
       } catch (error) {

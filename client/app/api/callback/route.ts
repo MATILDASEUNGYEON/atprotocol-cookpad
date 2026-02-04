@@ -6,12 +6,9 @@ export async function GET(req: NextRequest) {
   try {
     const searchParams = req.nextUrl.searchParams
     
-    console.log('📞 OAuth callback 수신:', searchParams.toString())
 
     const oauthClient = await getOAuthClient()
     const { session } = await oauthClient.callback(searchParams)
-
-    console.log('✅ 세션 생성 완료:', session.did)
 
     const publicAgent = new AtpAgent({ service: 'https://public.api.bsky.app' })
     const profile = await publicAgent.getProfile({ actor: session.did })
@@ -33,7 +30,7 @@ export async function GET(req: NextRequest) {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
-      maxAge: 60 * 60 * 24 * 30, // 30일
+      maxAge: 60 * 60 * 24 * 30,
     })
     
     response.cookies.set('handle', profile.data.handle, {
@@ -42,8 +39,6 @@ export async function GET(req: NextRequest) {
       sameSite: 'lax',
       maxAge: 60 * 60 * 24 * 30,
     })
-
-    console.log('✅ 로그인 성공, 홈으로 리다이렉트:', profile.data.handle)
 
     return response
   } catch (error: any) {

@@ -12,8 +12,6 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    console.log('🔐 로그인 시도:', identifier)
-
     const oauthClient = await getOAuthClient()
     const url = await oauthClient.authorize(identifier, {
       scope: 'atproto transition:generic'

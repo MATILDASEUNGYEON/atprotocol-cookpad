@@ -34,7 +34,6 @@ export default async function listPage() {
     const data = await response.json()
     const recipes = data.recipes || []
     
-    console.log(`✅ Loaded ${recipes.length} recipes from AppView`)
 
     return (
       <div className="home-layout">

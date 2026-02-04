@@ -25,8 +25,6 @@ export default function RecipeActions({ recipe }: Props) {
     try {
       const formData = new FormData()
 
-      console.log('🔍 [RecipeActions] Sending recipe.cookTime to API:', recipe.cookTime, typeof recipe.cookTime)
-      
       formData.append('title', recipe.title)
       formData.append('description', recipe.description)
       formData.append('serves', String(recipe.serves))

@@ -13,8 +13,6 @@ export function RecipeCard({ recipe }: { recipe: RecipeListItem }) {
     }
   }
 
-  console.log('🔍 [RecipeCard] Received cook_time_minutes:', recipe.cook_time_minutes, typeof recipe.cook_time_minutes)
-
   return (
     <article className="recipe-card" onClick={handleClick}>
       <div className="recipe-image">

@@ -26,7 +26,6 @@ export async function GET(
     }
 
     const recipe = await response.json()
-    console.log('📖 [GET] Recipe steps from AppView:', JSON.stringify(recipe.steps, null, 2))
     return NextResponse.json(recipe)
 
   } catch (error) {
@@ -69,12 +68,6 @@ export async function PUT(
       thumbnail_url: formData.get('thumbnail_url') as string
     }
 
-    console.log('✏️ Updating recipe:', { rkey, did })
-    console.log('📥 Received data:', {
-      ingredients: body.ingredients,
-      steps: body.steps
-    })
-
     const { agent, did: repoDid } = await getSessionAgent(did)
 
     const appViewUrl =
@@ -103,7 +96,6 @@ export async function PUT(
       )
     }
 
-    // Convert ingredients to PDS format
     const ingredientsForPDS = (body.ingredients || []).map((ing: any) => {
       if (ing.type === 'section') {
         return {
@@ -118,26 +110,19 @@ export async function PUT(
       }
     })
 
-    // Convert steps to PDS format with image upload support
     const stepsForPDS = await Promise.all((body.steps || []).map(async (step: any) => {
       let imageBlob = undefined
       
-      // Check if there's a new image file to upload
       const stepImageFile = formData.get(`stepImage:${step.id}`) as File | null
       
       if (stepImageFile) {
-        // Upload new image
-        console.log(`📤 Uploading new image for step ${step.id}`)
         const imageBytes = await stepImageFile.arrayBuffer()
         const imageUpload = await agent.uploadBlob(
           new Uint8Array(imageBytes),
           { encoding: stepImageFile.type }
         )
         imageBlob = imageUpload.data.blob
-        console.log(`✅ Step ${step.id} image uploaded:`, imageBlob)
       } else if (step.existingImageUrl) {
-        // Preserve existing image URL by converting to blob format
-        console.log(`♻️ Preserving existing image for step ${step.id}:`, step.existingImageUrl)
         if (step.existingImageUrl.includes('cdn.bsky.app')) {
           const match = step.existingImageUrl.match(/plain\/[^/]+\/([^@]+)/)
           if (match) {
@@ -147,7 +132,6 @@ export async function PUT(
               mimeType: 'image/jpeg',
               size: 0
             }
-            console.log(`✅ Extracted blob reference:`, imageBlob)
           }
         }
       }
@@ -157,11 +141,6 @@ export async function PUT(
         image: imageBlob
       }
     }))
-
-    console.log('📝 Formatted for PDS:', {
-      ingredients: ingredientsForPDS,
-      steps: stepsForPDS
-    })
 
     await agent.com.atproto.repo.putRecord({
       repo: repoDid,
@@ -183,7 +162,6 @@ export async function PUT(
       },
     })
 
-    console.log('✅ Recipe updated on PDS')
 
     return NextResponse.json({
       success: true,
@@ -213,19 +191,14 @@ export async function DELETE(
     const did = req.cookies.get('did')?.value
 
     if (!did) {
-      console.log('❌ Unauthorized: No DID in cookies')
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }
       )
     }
 
-    console.log('🗑️ Deleting recipe:', { rkey, did })
-
-    console.log('🔐 Restoring OAuth session...')
     const { agent, did: repoDid } = await getSessionAgent(did)
 
-    console.log('🔍 Checking recipe existence...')
     const appViewUrl = process.env.NEXT_PUBLIC_APP_VIEW_URL || 'http://localhost:3000'
     const checkResponse = await fetch(`${appViewUrl}/api/recipes/${rkey}`)
     
@@ -242,21 +215,18 @@ export async function DELETE(
     const recipe = await checkResponse.json()
     
     if (recipe.author_did !== repoDid) {
-      console.log('❌ Forbidden: Not the recipe author')
       return NextResponse.json(
         { error: 'Forbidden: You can only delete your own recipes' },
         { status: 403 }
       )
     }
 
-    console.log('🔥 Deleting record from PDS...')
     await agent.com.atproto.repo.deleteRecord({
       repo: repoDid,
       collection: 'com.cookpad.recipe',
       rkey: rkey,
     })
 
-    console.log('✅ Recipe deleted from PDS')
     
     return NextResponse.json({
       success: true,

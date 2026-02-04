@@ -247,9 +247,6 @@ recipeRouter.get('/api/recipes/by-tag/:prefix/:value', async (req, res) => {
     const tag = `${prefix}:${value}`
     const limit = parseInt(req.query.limit as string) || 50
 
-    console.log(`🔍 Searching recipes with tag: ${tag}`)
-
-    // JSON 배열 내부에서 태그 검색
     const recipes = await db
       .selectFrom('recipe')
       .selectAll()
@@ -259,7 +256,6 @@ recipeRouter.get('/api/recipes/by-tag/:prefix/:value', async (req, res) => {
       .limit(limit)
       .execute()
 
-    console.log(`✅ Found ${recipes.length} recipes with tag: ${tag}`)
 
     res.json({
       tag,

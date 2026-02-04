@@ -24,11 +24,9 @@ export default function ProfileEditPage() {
       if (!userInfo) return
 
       try {
-        // PDS에서 실제 프로필 정보 가져오기
         const res = await fetch('/api/me')
         if (res.ok) {
           const profile = await res.json()
-          console.log('📖 PDS에서 가져온 프로필:', profile)
           
           setFormData({
             name: profile.displayName || userInfo.handle.split('.')[0] || '',
@@ -37,7 +35,6 @@ export default function ProfileEditPage() {
             bio: profile.description || '',
           })
         } else {
-          // API 실패 시 localStorage 사용
           setFormData({
             name: userInfo.displayName || userInfo.handle.split('.')[0] || '',
             cookpadId: userInfo.handle || '',
@@ -117,7 +114,6 @@ export default function ProfileEditPage() {
           </button>
 
           <div className="edit-form">
-            {/* Avatar */}
             <div className="avatar-section">
               <div className="edit-avatar">
                 <span>{userInfo ? getInitials(userInfo.handle) : 'U'}</span>
@@ -132,7 +128,6 @@ export default function ProfileEditPage() {
               </div>
             </div>
 
-            {/* Name */}
             <div className="form-group">
               <label className="form-label">Name</label>
               <input
@@ -145,7 +140,6 @@ export default function ProfileEditPage() {
               />
             </div>
 
-            {/* Bluesky ID */}
             <div className="form-group">
               <label className="form-label">Bluesky ID</label>
               <input
@@ -156,7 +150,6 @@ export default function ProfileEditPage() {
               />
             </div>
 
-            {/* Location */}
             <div className="form-group">
               <label className="form-label">Location</label>
               <input
@@ -170,7 +163,6 @@ export default function ProfileEditPage() {
               />
             </div>
 
-            {/* Bio */}
             <div className="form-group">
               <label className="form-label">
                 About you and your love of cooking
@@ -186,7 +178,6 @@ export default function ProfileEditPage() {
               />
             </div>
 
-            {/* Actions */}
             <div className="form-actions">
               <button
                 className="update-btn"

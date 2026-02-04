@@ -85,7 +85,6 @@ export default function StepsEditor({ recipe, setRecipe }: Props) {
     const cookTime = h > 0 || minutes > 0 
       ? `${h > 0 ? `${h}hr ` : ''}${minutes > 0 ? `${minutes}mins` : ''}`.trim()
       : ''
-    console.log('🔍 [StepsEditor] Hours changed - Setting cookTime:', cookTime)
     setRecipe(r => ({ ...r, cookTime }))
   }
 
@@ -94,8 +93,7 @@ export default function StepsEditor({ recipe, setRecipe }: Props) {
     const cookTime = hours > 0 || m > 0
       ? `${hours > 0 ? `${hours}hr ` : ''}${m > 0 ? `${m}mins` : ''}`.trim()
       : ''
-    console.log('🔍 [StepsEditor] Minutes changed - Setting cookTime:', cookTime)
-    setRecipe(r => ({ ...r, cookTime }))
+   setRecipe(r => ({ ...r, cookTime }))
   }
 
   return (

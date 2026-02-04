@@ -17,7 +17,6 @@ export function useAuth() {
         const did = didCookie.split('=')[1]
         const storedHandle = localStorage.getItem('userHandle')
         
-        // 먼저 localStorage의 정보로 초기화
         setIsLoggedIn(true)
         setUserInfo({
           did,
@@ -27,14 +26,11 @@ export function useAuth() {
         })
         setIsLoading(false)
 
-        // PDS에서 최신 프로필 정보 가져오기
         try {
           const res = await fetch('/api/me')
           if (res.ok) {
             const profile = await res.json()
-            console.log('🔄 최신 프로필 정보 업데이트:', profile.displayName)
             
-            // localStorage 업데이트
             if (profile.displayName) {
               localStorage.setItem('userDisplayName', profile.displayName)
             }
@@ -45,7 +41,6 @@ export function useAuth() {
               localStorage.setItem('userAvatar', profile.avatar)
             }
             
-            // 상태 업데이트
             setUserInfo({
               did,
               handle: profile.handle || storedHandle || 'user',

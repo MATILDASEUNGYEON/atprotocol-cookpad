@@ -9,7 +9,6 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    console.log('🔐 OAuth session restore for DID:', did)
     const { agent, did: repoDid } = await getSessionAgent(did)
 
     const formData = await req.formData()
@@ -19,21 +18,17 @@ export async function POST(req: NextRequest) {
     const serves = parseInt(formData.get('serves') as string)
     const cookTime = formData.get('cookTime') as string
     
-    console.log('🔍 [API] Received cookTime from client:', cookTime, typeof cookTime)
     
-    // Parse "1hr 30mins" to minutes
     const hourMatch = cookTime.match(/(\d+)hr/)
     const minMatch = cookTime.match(/(\d+)mins?/)
     const cookTimeMinutes = (hourMatch ? parseInt(hourMatch[1]) * 60 : 0) + (minMatch ? parseInt(minMatch[1]) : 0)
     
-    console.log('🔍 [API] Converted to cookTimeMinutes:', cookTimeMinutes, typeof cookTimeMinutes)
-    
+   
     const ingredients = JSON.parse(formData.get('ingredients') as string)
     const tips = formData.get('tips') as string
     const status = formData.get('status') as string
     const steps = JSON.parse(formData.get('steps') as string)
 
-    console.log('📤 Uploading blobs to PDS...')
     
     let thumbnailBlob = null
     const thumbnailFile = formData.get('thumbnail') as File | null
@@ -44,7 +39,6 @@ export async function POST(req: NextRequest) {
         { encoding: thumbnailFile.type }
       )
       thumbnailBlob = thumbnailUpload.data.blob
-      console.log('✅ Thumbnail uploaded:', thumbnailBlob)
     }
 
     const stepsWithBlobs = await Promise.all(
@@ -60,7 +54,6 @@ export async function POST(req: NextRequest) {
           { encoding: stepImageFile.type }
         )
         
-        console.log(`✅ Step ${step.id} image uploaded:`, imageUpload.data.blob)
         
         return {
           text: step.description,
@@ -68,10 +61,7 @@ export async function POST(req: NextRequest) {
         }
       })
     )
-
-    console.log('📝 Creating recipe record on PDS...')
     
-    // 자동 태그 생성
     const autoTags = generateTags(
       ingredients.map((ing: any) => ({
         type: ing.section ? 'section' : 'ingredient',
@@ -82,7 +72,6 @@ export async function POST(req: NextRequest) {
       description
     )
     
-    console.log('🏷️ Generated tags:', autoTags)
     
     const recipeRecord = {
       title,
@@ -106,13 +95,6 @@ export async function POST(req: NextRequest) {
       collection: 'com.cookpad.recipe',
       record: recipeRecord,
     })
-
-    console.log('✅ Recipe record created:', record.data.uri)
-    
-    // 6️⃣ 이 시점에서 Firehose 이벤트 자동 발생
-    // → PDS가 commit event 발행
-    // → Jetstream이 수신
-    // → AppView consumer가 인덱싱
 
     return NextResponse.json({
       success: true,

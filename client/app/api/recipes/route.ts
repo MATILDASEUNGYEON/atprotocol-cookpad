@@ -16,8 +16,6 @@ export async function GET(req: NextRequest) {
       url += `&author=${authorDid}`
     }
 
-    console.log('🔍 Fetching from AppView:', url)
-
     const response = await fetch(url)
     
     if (!response.ok) {
@@ -26,7 +24,6 @@ export async function GET(req: NextRequest) {
     }
 
     const data = await response.json()
-    console.log('✅ Recipes fetched:', data.recipes?.length || 0)
     return NextResponse.json(data)
     
   } catch (error) {

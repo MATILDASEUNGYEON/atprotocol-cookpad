@@ -54,12 +54,6 @@ export default function RecipeEditPage({
           image: step.image
         }))
 
-      console.log('📤 Sending update:', {
-        ingredients: ingredientsFormatted,
-        steps: stepsFormatted
-      })
-
-      // Parse cookTime "1hr 30mins" format to minutes (same as upload)
       const cookTime = recipe.cookTime
       const hourMatch = cookTime.match(/(\d+)hr/)
       const minMatch = cookTime.match(/(\d+)mins?/)
