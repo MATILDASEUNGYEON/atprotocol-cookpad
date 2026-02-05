@@ -50,7 +50,9 @@ export default function HomePage() {
           </div>
 
           <section className="category-section">
-            <h3>Quick & Easy</h3>
+            <div className="section-header">
+              <h3>Key Word</h3>
+            </div>
             <div className="category-grid">
               <div 
                 className="category-placeholder"
@@ -86,7 +88,6 @@ export default function HomePage() {
           <section className="ingredients-section">
             <div className="section-header">
               <h3>Popular Ingredients</h3>
-              <span className="update-time">Updated 9:02 PM</span>
             </div>
             <div className="ingredients-grid">
               <div className="ingredient-card"
@@ -101,7 +102,6 @@ export default function HomePage() {
           <section className="dishes-section">
             <div className="section-header">
               <h3>Explore by Cuisine</h3>
-              <span className="update-time">Updated 8:51 PM</span>
             </div>
             <div className="dishes-grid">
               <div className="dish-card" onClick={() => window.location.href = '/search/cuisine-korean'}>

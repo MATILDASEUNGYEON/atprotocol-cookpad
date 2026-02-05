@@ -41,8 +41,6 @@ export function generateTags(
         tags.push(`ingredient:${normalized}`)
       }
     })
-  
-  // 2. Cuisine 태그 추론 (제목 + 설명 기반)
   const text = `${title} ${description || ''}`.toLowerCase()
   
   const cuisinePatterns = [
@@ -116,9 +114,6 @@ export function generateTags(
   return Array.from(new Set(tags))
 }
 
-/**
- * 태그를 사람이 읽기 쉬운 형태로 변환
- */
 export function formatTag(tag: string): string {
   const [prefix, value] = tag.split(':')
   
