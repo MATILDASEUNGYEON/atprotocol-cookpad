@@ -1,7 +1,9 @@
 import {Ingredient, IngredientSectionTitle, IngredientsEditorProps } from "@/types/recipe"
+import { useState } from 'react'
 
 export default function IngredientsEditor({ recipe, setRecipe }: IngredientsEditorProps) {
   const ingredients = recipe.ingredients || []
+  const [draggedIndex, setDraggedIndex] = useState<number | null>(null)
 
   const addSection = () => {
     setRecipe(prev => ({
@@ -43,6 +45,27 @@ export default function IngredientsEditor({ recipe, setRecipe }: IngredientsEdit
     }))
   }
 
+  const handleDragStart = (index: number) => {
+    setDraggedIndex(index)
+  }
+
+  const handleDragOver = (e: React.DragEvent, index: number) => {
+    e.preventDefault()
+    if (draggedIndex === null || draggedIndex === index) return
+
+    const newIngredients = [...ingredients]
+    const draggedItem = newIngredients[draggedIndex]
+    newIngredients.splice(draggedIndex, 1)
+    newIngredients.splice(index, 0, draggedItem)
+
+    setRecipe(prev => ({ ...prev, ingredients: newIngredients }))
+    setDraggedIndex(index)
+  }
+
+  const handleDragEnd = () => {
+    setDraggedIndex(null)
+  }
+
   if (ingredients.length === 0) {
     setRecipe(prev => ({
       ...prev,
@@ -67,8 +90,15 @@ export default function IngredientsEditor({ recipe, setRecipe }: IngredientsEdit
         />
       </div>
 
-      {ingredients.map((item) => (
-        <div key={item.id} className="ingredient-row">
+      {ingredients.map((item, index) => (
+        <div 
+          key={item.id} 
+          className="ingredient-row"
+          draggable
+          onDragStart={() => handleDragStart(index)}
+          onDragOver={(e) => handleDragOver(e, index)}
+          onDragEnd={handleDragEnd}
+        >
           <span className="drag-handle">☰</span>
           <input
             type="text"
@@ -78,7 +108,11 @@ export default function IngredientsEditor({ recipe, setRecipe }: IngredientsEdit
           />
           <button
             className="menu-button"
-            onClick={() => removeItem(item.id)}
+            onClick={() => {
+              if(confirm('Delete this item?')) {
+                removeItem(item.id)
+              }
+            }}
             title="Remove"
           >
             ⋯
