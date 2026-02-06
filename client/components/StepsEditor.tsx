@@ -1,14 +1,9 @@
 'use client'
 
-import { RecipeDraft, Step } from '@/types/recipe'
+import { StepsEditorProps,Step} from '@/types/recipe'
 import { useState } from 'react'
 
-type Props = {
-  recipe: RecipeDraft
-  setRecipe: React.Dispatch<React.SetStateAction<RecipeDraft>>
-}
-
-export default function StepsEditor({ recipe, setRecipe }: Props) {
+export default function StepsEditor({ recipe, setRecipe }: StepsEditorProps) {
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null)
 
   const addStep = () => {

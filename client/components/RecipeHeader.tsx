@@ -1,14 +1,9 @@
 'use client'
 
-import { RecipeDraft } from '@/types/recipe'
+import { RecipeHeaderProps } from '@/types/recipe'
 import { useAuth } from '@/hooks/useAuth'
 
-type Props = {
-  recipe: RecipeDraft
-  setRecipe: React.Dispatch<React.SetStateAction<RecipeDraft>>
-}
-
-export default function RecipeHeader({ recipe, setRecipe }: Props) {
+export default function RecipeHeader({ recipe, setRecipe }: RecipeHeaderProps) {
   const { userInfo, getInitials } = useAuth()
 
   return (

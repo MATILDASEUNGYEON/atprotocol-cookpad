@@ -1,17 +1,6 @@
 'use client'
 
-import Image from 'next/image'
-import { useAuth } from '@/hooks/useAuth'
-interface RecipeDetailHeaderProps {
-  title: string
-  description: string
-  author: {
-    handle: string
-    displayName?: string
-    avatar?: string
-  }
-  status?: string
-}
+import {RecipeDetailHeaderProps} from "@/types/recipeDetail"
 
 export default function RecipeDetailHeader({
   title,

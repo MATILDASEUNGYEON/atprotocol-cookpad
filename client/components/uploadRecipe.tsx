@@ -1,9 +1,6 @@
-type Props = {
-  thumbnail?: File | string | null
-  onChange: (file: File) => void
-}
+import {RecipeThumbnailProps} from '@/types/recipe'
 
-export default function RecipeThumbnail({ thumbnail, onChange }: Props) {
+export default function RecipeThumbnail({ thumbnail, onChange }: RecipeThumbnailProps) {
   const getImageSrc = () => {
     if (!thumbnail) return null
     if (typeof thumbnail === 'string') return thumbnail

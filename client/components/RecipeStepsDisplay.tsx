@@ -1,12 +1,7 @@
 'use client'
 
 import Image from 'next/image'
-import { Step } from '@/types/recipe'
-
-interface RecipeStepsDisplayProps {
-  cookTimeMinutes: number | string
-  steps: Step[]
-}
+import { RecipeStepsDisplayProps } from '@/types/recipe'
 
 export default function RecipeStepsDisplay({
   cookTimeMinutes,

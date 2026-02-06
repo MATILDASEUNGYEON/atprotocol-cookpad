@@ -1,11 +1,6 @@
 'use client'
 
-interface PremiumFiltersProps {
-  photosInSteps: boolean
-  withCooksnaps: boolean
-  onPhotosInStepsChange: (value: boolean) => void
-  onWithCooksnapsChange: (value: boolean) => void
-}
+import {PremiumFiltersProps} from "@/types/filter"
 
 export default function PremiumFilters({
   photosInSteps,

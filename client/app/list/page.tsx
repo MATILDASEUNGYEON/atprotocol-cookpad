@@ -3,7 +3,7 @@ import RecipeList from '@/components/RecipeList'
 import Header from '@/components/header'
 import Sidebar from '@/components/Sidebar'
 
-const APPVIEW_API = process.env.NEXT_PUBLIC_APPVIEW_URL || 'http://localhost:3000'
+const APPVIEW_API = process.env.NEXT_PUBLIC_APPVIEW_URL || 'http://localhost:1212'
 
 export default async function listPage() {
   try {

@@ -1,14 +1,10 @@
 'use client'
 
-import { FilterState, COUNTRIES } from '@/types/filter'
+import { FilterPanelProps, COUNTRIES } from '@/types/filter'
 import CountryFilter from './CountryFilter'
 import IngredientsFilter from './IngredientsFilter'
 import PremiumFilters from './PremiumFilters'
 
-interface FilterPanelProps {
-  filters: FilterState
-  onFilterChange: (filters: FilterState) => void
-}
 
 export default function FilterPanel({ filters, onFilterChange }: FilterPanelProps) {
   const handleCountrySelect = (countryCode: string) => {

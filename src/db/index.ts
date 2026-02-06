@@ -34,7 +34,6 @@ export const migrateToLatest = async (db: Database) => {
   if (error) throw error
 }
 
-// Consumer에서 사용할 수 있도록 전역 db 인스턴스 export
 export let db: Database
 
 export const initializeDb = (location: string): Database => {

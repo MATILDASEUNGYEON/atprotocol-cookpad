@@ -1,15 +1,7 @@
 'use client'
 
 import { useState, KeyboardEvent } from 'react'
-
-interface IngredientsFilterProps {
-  includeIngredients: string[]
-  excludeIngredients: string[]
-  onIncludeAdd: (ingredient: string) => void
-  onExcludeAdd: (ingredient: string) => void
-  onIncludeRemove: (ingredient: string) => void
-  onExcludeRemove: (ingredient: string) => void
-}
+import {IngredientsFilterProps} from "@/types/filter"
 
 export default function IngredientsFilter({
   includeIngredients,

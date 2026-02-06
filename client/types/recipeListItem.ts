@@ -1,7 +1,3 @@
-/**
- * ATProtocol AppView에서 제공하는 레시피 목록 아이템
- * AppView DB의 Recipe 스키마와 매칭됨
- */
 export type RecipeListItem = {
   uri: string 
   cid: string 
@@ -10,7 +6,6 @@ export type RecipeListItem = {
   title: string
   description?: string
   servings?: number
-  // cook_time_minutes?: 
   cook_time_minutes?: string
   thumbnail_url?: string
   tags: string[]        
@@ -21,4 +16,7 @@ export type RecipeListItem = {
   
   ingredientSummary?: string
   bookmarked?: boolean
+}
+export interface RecipeListProps {
+  recipes: RecipeListItem[]
 }

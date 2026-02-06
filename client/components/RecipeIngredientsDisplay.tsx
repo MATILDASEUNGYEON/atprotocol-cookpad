@@ -1,13 +1,8 @@
 'use client'
 
 import Link from 'next/link'
-import { IngredientItem } from '@/types/recipe'
+import { RecipeIngredientsDisplayProps } from '@/types/recipeDetail'
 import { normalizeIngredient } from '@/lib/tags'
-
-interface RecipeIngredientsDisplayProps {
-  serves: number
-  ingredients: IngredientItem[]
-}
 
 export default function RecipeIngredientsDisplay({
   serves,
@@ -22,24 +17,25 @@ export default function RecipeIngredientsDisplay({
           <span>{serves} servings</span>
         </div>
       </div>
-
+    
       <div className="ingredients-list">
-        {ingredients.map((item) => {
+        {ingredients.map((item, index) => {
+          const key = `${item.type}-${item.id ?? index}`
+
           if (item.type === 'section') {
             return (
-              <div key={item.id} className="ingredient-section-title">
+              <div key={key} className="ingredient-section-title">
                 {item.title}
               </div>
             )
           }
 
           return (
-            <div key={item.id} className="ingredient-item">
-              <Link 
+            <div key={key} className="ingredient-item">
+              <Link
                 href={`/search/ingredient-${normalizeIngredient(item.name || '')}`}
                 className="ingredient-link"
                 style={{
-                  textDecoration: 'underline',
                   color: 'inherit',
                   cursor: 'pointer'
                 }}

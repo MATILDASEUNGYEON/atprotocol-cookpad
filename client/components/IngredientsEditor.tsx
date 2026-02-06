@@ -1,9 +1,4 @@
-import { RecipeDraft, Ingredient, IngredientSectionTitle, IngredientItem } from "@/types/recipe"
-
-interface IngredientsEditorProps {
-  recipe: RecipeDraft
-  setRecipe: (updater: (prev: RecipeDraft) => RecipeDraft) => void
-}
+import {Ingredient, IngredientSectionTitle, IngredientsEditorProps } from "@/types/recipe"
 
 export default function IngredientsEditor({ recipe, setRecipe }: IngredientsEditorProps) {
   const ingredients = recipe.ingredients || []

@@ -1,16 +1,9 @@
 'use client'
 
-import { RecipeDraft } from '@/types/recipe'
+import { RecipeEditActionsProps } from '@/types/recipe'
 import { useRouter } from 'next/navigation'
 
-type Props = {
-  recipe: RecipeDraft
-  recipeId: string
-  onSave: () => Promise<void>
-  saving: boolean
-}
-
-export default function RecipeEditActions({ recipe, recipeId, onSave, saving }: Props) {
+export default function RecipeEditActions({ recipe, recipeId, onSave, saving }: RecipeEditActionsProps) {
   const router = useRouter()
 
   const handleCancel = () => {

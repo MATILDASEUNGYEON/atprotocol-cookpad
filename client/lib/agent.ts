@@ -14,7 +14,6 @@ export async function getSessionAgent(did: string) {
     throw new Error(`세션을 찾을 수 없습니다: ${did}`)
   }
 
-  // Agent 클래스는 OAuth session을 생성자로 받음
   const agent = new Agent(oauthSession)
 
   return {

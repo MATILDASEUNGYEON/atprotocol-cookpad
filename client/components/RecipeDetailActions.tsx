@@ -1,18 +1,5 @@
 'use client'
-
-interface RecipeDetailActionsProps {
-  isOwner: boolean
-  isLoggedIn: boolean
-  isLiked: boolean
-  isSaved: boolean
-  likesCount: number
-  onLike: () => void
-  onSave: () => void
-  onAddToFolder: () => void
-  onShare: () => void
-  onDelete: () => void
-  onEdit: () => void
-}
+import {RecipeDetailActionsProps} from '@/types/recipeDetail'
 
 export default function RecipeDetailActions({
   isOwner,

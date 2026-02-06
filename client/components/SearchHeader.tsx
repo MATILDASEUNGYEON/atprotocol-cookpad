@@ -1,13 +1,6 @@
 'use client'
 
-import { SortTab } from '@/types/filter'
-
-interface SearchHeaderProps {
-  category: string
-  totalCount: number
-  activeTab: SortTab
-  onTabChange: (tab: SortTab) => void
-}
+import { SearchHeaderProps } from '@/types/filter'
 
 export default function SearchHeader({ 
   category, 
@@ -15,13 +8,11 @@ export default function SearchHeader({
   activeTab, 
   onTabChange 
 }: SearchHeaderProps) {
-  // Format category for display
   const displayCategory = category
     .split('-')
     .map(word => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' & ')
 
-  // Get related subcategories
   const getSubcategories = (cat: string) => {
     const subcategories: { [key: string]: string[] } = {
       'quick-easy': ['Appetizers', 'Breakfast', 'Dinners', 'Desserts'],

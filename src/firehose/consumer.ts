@@ -2,16 +2,6 @@ import { Jetstream } from '@skyware/jetstream'
 import WebSocket from 'ws'
 import { db } from '../db/index.js'
 
-const JETSTREAM_URL = 'wss://jetstream2.us-east.bsky.network/subscribe'
-
-/**
- * Firehose Consumer
- * 
- * 역할:
- * 1. Jetstream에 연결 (firehose 이벤트 수신)
- * 2. com.cookpad.recipe collection commit 감지
- * 3. AppView DB에 인덱싱
- */
 export async function startFirehoseConsumer() {
 
   const jetstream = new Jetstream({
@@ -85,9 +75,6 @@ export async function startFirehoseConsumer() {
   console.log('✅ Firehose Consumer started')
 }
 
-/**
- * AppView DB에 레시피 인덱싱
- */
 async function indexRecipe(recipe: {
   uri: string
   cid: string
@@ -108,9 +95,6 @@ async function indexRecipe(recipe: {
     .execute()
 }
 
-/**
- * 레시피 인덱스 업데이트
- */
 async function updateRecipeIndex(update: {
   uri: string
   cid: string
@@ -132,9 +116,6 @@ async function updateRecipeIndex(update: {
     .execute()
 }
 
-/**
- * 레시피 인덱스 삭제
- */
 async function deleteRecipeIndex(uri: string) {
   await db
     .deleteFrom('recipe')
@@ -142,10 +123,6 @@ async function deleteRecipeIndex(uri: string) {
     .execute()
 }
 
-/**
- * Blob URL 생성
- * PDS에서 이미지를 가져올 수 있는 URL
- */
 function getBlobUrl(did: string, cid: string): string {
 
   return `https://cdn.bsky.app/img/feed_thumbnail/plain/${did}/${cid}@jpeg`

@@ -1,12 +1,6 @@
 'use client'
 
-import { Country } from '@/types/filter'
-
-interface CountryFilterProps {
-  countries: Country[]
-  selectedCountry: string | null
-  onCountrySelect: (countryCode: string) => void
-}
+import { CountryFilterProps } from '@/types/filter'
 
 export default function CountryFilter({ 
   countries, 

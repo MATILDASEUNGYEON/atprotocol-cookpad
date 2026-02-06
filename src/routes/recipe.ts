@@ -12,10 +12,6 @@ function formatCookTimeMinutes(minutes: number | null | undefined): string {
   return `${hours > 0 ? `${hours}hr ` : ''}${mins > 0 ? `${mins}mins` : ''}`.trim()
 }
 
-/**
- * 레시피 목록 조회 (AppView)
- * GET /api/recipes?visibility=published&limit=20
- */
 recipeRouter.get('/api/recipes', async (req, res) => {
   try {
     const visibility = (req.query.visibility as string) || 'published'
@@ -72,11 +68,6 @@ recipeRouter.get('/api/recipes', async (req, res) => {
   }
 })
 
-/**
- * 레시피 상세 조회 by rkey
- * GET /api/recipes/:rkey
- * AppView 메타데이터 + PDS 전체 record 조합
- */
 recipeRouter.get('/api/recipes/:rkey', async (req, res) => {
   try {
     const { rkey } = req.params
@@ -204,10 +195,6 @@ recipeRouter.get('/api/recipes/:rkey', async (req, res) => {
   }
 })
 
-/**
- * 내 레시피 목록 조회
- * GET /api/recipes/my
- */
 recipeRouter.get('/api/recipes/my', async (req, res) => {
   try {
     const did = req.cookies.did
@@ -236,11 +223,6 @@ recipeRouter.get('/api/recipes/my', async (req, res) => {
   }
 })
 
-/**
- * 태그 기반 레시피 검색
- * GET /api/recipes/by-tag/:prefix/:value
- * 예: /api/recipes/by-tag/ingredient/butter
- */
 recipeRouter.get('/api/recipes/by-tag/:prefix/:value', async (req, res) => {
   try {
     const { prefix, value } = req.params

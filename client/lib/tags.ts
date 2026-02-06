@@ -1,15 +1,6 @@
 /**
- * 태그 생성 및 정규화 유틸리티
- * ATProtocol 레시피 레코드에서 자동으로 태그를 추출
- */
-
-/**
  * 재료명 정규화
  * 수량/단위 제거하고 소문자로 변환
- * 
- * @example
- * normalizeIngredient("150 g marshmallows") → "marshmallows"
- * normalizeIngredient("2 cups butter") → "butter"
  */
 export function normalizeIngredient(name: string): string {
   return name

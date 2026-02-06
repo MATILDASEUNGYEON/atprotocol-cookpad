@@ -1,5 +1,4 @@
-// types/recipeDetail.ts
-import { Ingredient, IngredientItem, Step } from './recipe'
+import {IngredientItem, Step } from './recipe'
 
 export interface RecipeDetail {
   uri: string
@@ -28,11 +27,32 @@ export interface RecipeDetail {
   updatedAt?: string
 }
 
-export interface RecipeDetailActions {
+export interface RecipeDetailActionsProps {
+  isOwner: boolean
+  isLoggedIn: boolean
+  isLiked: boolean
+  isSaved: boolean
+  likesCount: number
+  onLike: () => void
   onSave: () => void
   onAddToFolder: () => void
   onShare: () => void
-  onPrint: () => void
-  onLike: () => void
-  onBookmark: () => void
+  onDelete: () => void
+  onEdit: () => void
+}
+
+export interface RecipeIngredientsDisplayProps{
+  serves: number
+  ingredients: IngredientItem[]
+}
+
+export interface RecipeDetailHeaderProps {
+  title: string
+  description: string
+  author: {
+    handle: string
+    displayName?: string
+    avatar?: string
+  }
+  status?: string
 }

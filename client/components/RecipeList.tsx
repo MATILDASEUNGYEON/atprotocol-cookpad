@@ -1,10 +1,6 @@
 'use client'
-import { RecipeListItem } from '@/types/recipeListItem'
+import { RecipeListProps } from '@/types/recipeListItem'
 import { RecipeCard } from './RecipeCard'
-
-interface RecipeListProps {
-  recipes: RecipeListItem[]
-}
 
 export default function RecipeList({ recipes }: RecipeListProps) {
   if (recipes.length === 0) {

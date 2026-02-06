@@ -1,10 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-const APPVIEW_API = process.env.NEXT_PUBLIC_APPVIEW_URL || 'http://localhost:3000'
+const APPVIEW_API = process.env.NEXT_PUBLIC_APPVIEW_URL || 'http://localhost:1212'
 
-/**
- * 레시피 목록 조회 (AppView에서)
- */
 export async function GET(req: NextRequest) {
   try {
     const searchParams = req.nextUrl.searchParams
