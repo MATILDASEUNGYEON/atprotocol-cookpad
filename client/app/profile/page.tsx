@@ -73,8 +73,8 @@ export default function ProfilePage() {
               </div>
             </div>
             <div className="profile-stats">
-                <span className="stat"><strong>0</strong> Following</span>
-                <span className="stat"><strong>0</strong> Followers</span>
+              <span className="stat"><strong>{userInfo?.followersCount ?? 0}</strong> Follower</span>
+              <span className="stat"><strong>{userInfo?.followsCount ?? 0}</strong> Follow</span>    
             </div>
             <button 
                 className="edit-profile-btn"

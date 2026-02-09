@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSessionAgent } from '@/lib/agent'
+import { generateTags } from '@/lib/tags'
 
 /**
  * GET /api/recipe/[id]
@@ -142,6 +143,15 @@ export async function PUT(
       }
     }))
 
+    const newTags = generateTags(
+      ingredientsForPDS,
+      body.title,
+      body.description
+    )
+
+    const existingTags = recipe.tags || []
+    const mergedTags = [...new Set([...existingTags, ...newTags])]
+
     await agent.com.atproto.repo.putRecord({
       repo: repoDid,
       collection: 'com.cookpad.recipe',
@@ -156,6 +166,7 @@ export async function PUT(
         cookTimeMinutes: body.cook_time_minutes,
         servings: body.servings,
         thumbnail: body.thumbnail_url ? undefined : null,
+        tags: mergedTags,
 
         createdAt: recipe.createdAt || new Date().toISOString(),
         updatedAt: new Date().toISOString(),

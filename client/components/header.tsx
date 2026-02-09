@@ -84,7 +84,7 @@ export default function Header({ onLoginClick }: HeaderProps) {
   return (
     <header className="top-header">
       <div className="header-logo">
-        <Image src={logo} alt="Cookpad Logo" width={36} height={36} />
+        <Image src={logo} alt="Cookpad Logo" width={36} height={36} style={{ width: '100%', height: 'auto' }} />
         <span className="logo-text-large">cookpad</span>
       </div>
       <div className="header-actions">

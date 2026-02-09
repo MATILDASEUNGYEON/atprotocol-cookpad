@@ -15,7 +15,7 @@ export default function Sidebar() {
     <aside className={`sidebar ${sidebarOpen ? 'open' : 'closed'}`}>
       <div className="sidebar-header">
         <a href="/" className="sidebar-logo">
-          <Image src={logo} alt="Cookpad Logo" width={24} height={24} />
+          <Image src={logo} alt="Cookpad Logo" width={24} height={24} style={{ width: '100%', height: 'auto' }}/>
           {sidebarOpen && <span className="logo-text">cookpad</span>}
         </a>
         <button className="toggle-btn" onClick={toggleSidebar}>

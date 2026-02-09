@@ -20,7 +20,8 @@ export function RecipeCard({ recipe }: { recipe: RecipeListItem }) {
           src={recipe.thumbnail_url || '/placeholder-recipe.jpg'} 
           alt={recipe.title} 
           width={400} 
-          height={200} 
+          height={200}
+          priority
         />
       </div>
       <div className="recipe-info">

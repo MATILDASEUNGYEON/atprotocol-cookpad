@@ -3,4 +3,6 @@ export interface UserInfo {
   handle: string
   displayName?: string
   avatar?: string
+  followsCount?: number
+  followersCount?: number
 }

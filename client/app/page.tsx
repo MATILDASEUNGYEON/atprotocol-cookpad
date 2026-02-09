@@ -77,10 +77,10 @@ export default function HomePage() {
               </div>
               <div 
                 className="category-placeholder"
-                onClick={() => window.location.href = '/search/attribute-spicy'}
+                onClick={() => window.location.href = '/search/attribute-healthy'}
                 style={{ cursor: 'pointer' }}
               >
-                🌶️ Spicy
+                🦾 healthy diet
               </div>
             </div>
           </section>
@@ -93,9 +93,12 @@ export default function HomePage() {
               <div className="ingredient-card"
                 onClick={() => window.location.href = 'list'}
               >전체 레시피 확인</div>
-              <div className="ingredient-card">Chicken Breast</div>
-              <div className="ingredient-card">Pork Chops</div>
-              <div className="ingredient-card">Bacon</div>
+              <div className="ingredient-card"
+                onClick={()=> window.location.href = '/search/ingredient-kimchi'}>Kimchi</div>
+              <div className="ingredient-card"
+                onClick={()=> window.location.href = '/search/ingredient-pasta'}>Pasta</div>
+              <div className="ingredient-card"
+                onClick={()=> window.location.href = '/search/ingredient-bacon'}>Bacon</div>
             </div>
           </section>
 

@@ -19,6 +19,8 @@ export async function GET(req: NextRequest) {
       description: profile.data.description,
       avatar: profile.data.avatar,
       banner: profile.data.banner,
+      followsCount: profile.data.followsCount || 0,
+      followersCount: profile.data.followersCount || 0,
     })
   } catch (error: any) {
     console.error('❌ 프로필 조회 실패:', error)

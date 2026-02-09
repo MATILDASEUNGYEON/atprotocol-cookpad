@@ -67,19 +67,19 @@ export function generateTags(
     tags.push('attribute:vegan')
   }
   
-  const spicyIngredients = [
-    'chili', 'pepper', 'hot sauce', 'cayenne', 'jalapeño', 'gochugaru',
-    '고추', '고춧가루', '청양고추', '매운', 'spicy'
+  const healthyIngredients = [
+    'tofu', 'beans', 'tuna', 'salmon', 'avocado', 'cabbage',
+    'brown rice', 'oats', 'olive oil', 'almonds', '케일', '아보카도', '현미', '귀리'
   ]
   
-  const isSpicy = ingredients.some(ing => {
+  const isHealthy = ingredients.some(ing => {
     if (ing.type !== 'ingredient' || !ing.name) return false
     const normalized = ing.name.toLowerCase()
-    return spicyIngredients.some(spice => normalized.includes(spice))
-  }) || /spicy|매운/i.test(text)
+    return healthyIngredients.some(healthy => normalized.includes(healthy))
+  }) || /healthy|다이어트/i.test(text)
   
-  if (isSpicy) {
-    tags.push('attribute:spicy')
+  if (isHealthy) {
+    tags.push('attribute:healthy')
   }
   
   const dessertIngredients = [

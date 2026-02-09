@@ -9,7 +9,7 @@ import '../../styles/profile-edit.css'
 
 export default function ProfileEditPage() {
   const router = useRouter()
-  const { userInfo, getInitials } = useAuth()
+  const { userInfo, getInitials, updateUserInfo } = useAuth()
   const [isLoading, setIsLoading] = useState(false)
 
   const [formData, setFormData] = useState({
@@ -20,40 +20,14 @@ export default function ProfileEditPage() {
   })
 
   useEffect(() => {
-    const fetchProfile = async () => {
-      if (!userInfo) return
+    if (!userInfo) return
 
-      try {
-        const res = await fetch('/api/me')
-        if (res.ok) {
-          const profile = await res.json()
-          
-          setFormData({
-            name: profile.displayName || userInfo.handle.split('.')[0] || '',
-            cookpadId: userInfo.handle || '',
-            location: localStorage.getItem('userLocation') || '',
-            bio: profile.description || '',
-          })
-        } else {
-          setFormData({
-            name: userInfo.displayName || userInfo.handle.split('.')[0] || '',
-            cookpadId: userInfo.handle || '',
-            location: localStorage.getItem('userLocation') || '',
-            bio: localStorage.getItem('userBio') || '',
-          })
-        }
-      } catch (err) {
-        console.error('프로필 로드 실패:', err)
-        setFormData({
-          name: userInfo.displayName || userInfo.handle.split('.')[0] || '',
-          cookpadId: userInfo.handle || '',
-          location: localStorage.getItem('userLocation') || '',
-          bio: localStorage.getItem('userBio') || '',
-        })
-      }
-    }
-
-    fetchProfile()
+    setFormData({
+      name: userInfo.displayName || userInfo.handle.split('.')[0] || '',
+      cookpadId: userInfo.handle || '',
+      location: localStorage.getItem('userLocation') || '',
+      bio: localStorage.getItem('userBio') || '',
+    })
   }, [userInfo])
 
   const handleUpdate = async () => {
@@ -79,14 +53,16 @@ export default function ProfileEditPage() {
         throw new Error(error.error || 'Update failed')
       }
 
-      if (formData.name) localStorage.setItem('userDisplayName', formData.name)
       if (formData.location) localStorage.setItem('userLocation', formData.location)
       if (formData.bio) localStorage.setItem('userBio', formData.bio)
 
+      updateUserInfo({
+        displayName: formData.name,
+      })
+
       alert('프로필이 업데이트되었습니다.')
       
-      // 페이지 새로고침으로 useAuth가 업데이트된 정보를 다시 읽도록 함
-      window.location.href = '/profile'
+      router.push('/profile')
     } catch (err) {
       console.error('프로필 업데이트 실패:', err)
       alert(err instanceof Error ? err.message : '프로필 업데이트에 실패했습니다.')

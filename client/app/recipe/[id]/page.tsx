@@ -40,7 +40,6 @@ export default function RecipeDetailPage({ params }: RecipeDetailPageProps) {
 
         const data = await response.json()
         
-        // Normalize steps data structure
         const normalizedSteps = Array.isArray(data.steps)
           ? data.steps.map((step: any) => ({
               id: step.id || crypto.randomUUID(),

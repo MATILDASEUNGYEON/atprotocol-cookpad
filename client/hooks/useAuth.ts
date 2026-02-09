@@ -45,7 +45,9 @@ export function useAuth() {
               did,
               handle: profile.handle || storedHandle || 'user',
               displayName: profile.displayName || undefined,
-              avatar: profile.avatar || undefined
+              avatar: profile.avatar || undefined,
+              followsCount: profile.followsCount || 0,
+              followersCount: profile.followersCount || 0
             })
           }
         } catch (err) {
@@ -118,11 +120,26 @@ export function useAuth() {
     return cleanHandle.slice(0, 2).toUpperCase()
   }
 
+  const updateUserInfo = (updates: Partial<UserInfo>) => {
+    if (userInfo) {
+      const updatedInfo = { ...userInfo, ...updates }
+      setUserInfo(updatedInfo)
+      
+      if (updates.displayName !== undefined) {
+        localStorage.setItem('userDisplayName', updates.displayName)
+      }
+      if (updates.avatar !== undefined) {
+        localStorage.setItem('userAvatar', updates.avatar)
+      }
+    }
+  }
+
   return {
     isLoggedIn,
     userInfo,
     isLoading,
     logout,
-    getInitials
+    getInitials,
+    updateUserInfo
   }
 }

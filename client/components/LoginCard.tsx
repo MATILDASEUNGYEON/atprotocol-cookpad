@@ -43,7 +43,7 @@ export default function LoginCard() {
       <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
 
         <div className="header-logo">
-            <Image src={logo} alt="Cookpad Logo" width={60} height={60} />
+            <Image src={logo} alt="Cookpad Logo" width={60} height={60} style={{ width: '100%', height: 'auto' }} />
             <span className="logo-text-large">cookpad</span>
           </div>
       </div>

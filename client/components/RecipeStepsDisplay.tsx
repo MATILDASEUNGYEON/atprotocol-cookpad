@@ -34,7 +34,6 @@ export default function RecipeStepsDisplay({
                         alt={`Step ${index + 1}`}
                         width={140}
                         height={140}
-                        style={{ objectFit: 'cover' }}
                       />
                     ) : (
                       <div className="image-placeholder">

@@ -39,13 +39,6 @@ export async function POST(req: NextRequest) {
       record: updatedRecord,
     })
 
-    
-    try {
-      const verifyProfile = await agent.getProfile({ actor: did })
-    } catch (err) {
-      console.error('⚠️ 프로필 확인 실패:', err)
-    }
-
     return NextResponse.json({ ok: true })
   } catch (error: any) {
     console.error('❌ 프로필 업데이트 실패:', error)
