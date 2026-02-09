@@ -90,15 +90,38 @@ export default function HomePage() {
               <h3>Popular Ingredients</h3>
             </div>
             <div className="ingredients-grid">
-              <div className="ingredient-card"
-                onClick={() => window.location.href = 'list'}
-              >전체 레시피 확인</div>
-              <div className="ingredient-card"
-                onClick={()=> window.location.href = '/search/ingredient-kimchi'}>Kimchi</div>
-              <div className="ingredient-card"
-                onClick={()=> window.location.href = '/search/ingredient-pasta'}>Pasta</div>
-              <div className="ingredient-card"
-                onClick={()=> window.location.href = '/search/ingredient-bacon'}>Bacon</div>
+              <div className="ingredient-card" onClick={() => window.location.href = '/list'}>
+                <div className="ingredient-icon">👨‍🍳</div>
+                <h4 className="ingredient-title">All Recipes</h4>
+                <p className="ingredient-description">Browse the full collection</p>
+                <button className="ingredient-explore-btn">
+                  Explore <span className="arrow">→</span>
+                </button>
+              </div>
+              <div className="ingredient-card" onClick={() => window.location.href = '/search/ingredient-kimchi'}>
+                <div className="ingredient-icon">👨‍🍳</div>
+                <h4 className="ingredient-title">Kimchi</h4>
+                <p className="ingredient-description">Korean fermented classic</p>
+                <button className="ingredient-explore-btn">
+                  Explore <span className="arrow">→</span>
+                </button>
+              </div>
+              <div className="ingredient-card" onClick={() => window.location.href = '/search/ingredient-pasta'}>
+                <div className="ingredient-icon">👨‍🍳</div>
+                <h4 className="ingredient-title">Pasta</h4>
+                <p className="ingredient-description">Italian staple goodness</p>
+                <button className="ingredient-explore-btn">
+                  Explore <span className="arrow">→</span>
+                </button>
+              </div>
+              <div className="ingredient-card" onClick={() => window.location.href = '/search/ingredient-bacon'}>
+                <div className="ingredient-icon">👨‍🍳</div>
+                <h4 className="ingredient-title">Bacon</h4>
+                <p className="ingredient-description">Smoky and savory</p>
+                <button className="ingredient-explore-btn">
+                  Explore <span className="arrow">→</span>
+                </button>
+              </div>
             </div>
           </section>
 
@@ -108,28 +131,36 @@ export default function HomePage() {
             </div>
             <div className="dishes-grid">
               <div className="dish-card" onClick={() => window.location.href = '/search/cuisine-korean'}>
-                🇰🇷 Korean
+                <img src="/images/korean.png" alt="Korean cuisine" />
+                <div className="dish-overlay" />
+                <div className="dish-content">
+                  <span className="flag">🇰🇷</span>
+                  <span className="label">Korean</span>
+                </div>
               </div>
               <div className="dish-card" onClick={() => window.location.href = '/search/cuisine-italian'}>
-                🇮🇹 Italian
+                <img src="/images/italian.png" alt="Italian cuisine" />
+                <div className="dish-overlay" />
+                <div className="dish-content">
+                  <span className="flag">🇮🇹</span>
+                  <span className="label">Italian</span>
+                </div>
               </div>
               <div className="dish-card" onClick={() => window.location.href = '/search/cuisine-japanese'}>
-                🇯🇵 Japanese
-              </div>
-              <div className="dish-card" onClick={() => window.location.href = '/search/cuisine-chinese'}>
-                🇨🇳 Chinese
+                <img src="/images/japanese.png" alt="Japanese cuisine" />
+                <div className="dish-overlay" />
+                <div className="dish-content">
+                  <span className="flag">🇯🇵</span>
+                  <span className="label">Japanese</span>
+                </div>
               </div>
               <div className="dish-card" onClick={() => window.location.href = '/search/cuisine-mexican'}>
-                🇲🇽 Mexican
-              </div>
-              <div className="dish-card" onClick={() => window.location.href = '/search/cuisine-french'}>
-                🇫🇷 French
-              </div>
-              <div className="dish-card" onClick={() => window.location.href = '/search/cuisine-indian'}>
-                🇮🇳 Indian
-              </div>
-              <div className="dish-card" onClick={() => window.location.href = '/search/cuisine-thai'}>
-                🇹🇭 Thai
+                <img src="/images/mexican.png" alt="Mexican cuisine" />
+                <div className="dish-overlay" />
+                <div className="dish-content">
+                  <span className="flag">🇲🇽</span>
+                  <span className="label">Mexican</span>
+                </div>
               </div>
             </div>
           </section>

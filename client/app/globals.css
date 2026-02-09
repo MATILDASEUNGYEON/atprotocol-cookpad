@@ -359,13 +359,17 @@ body {
 .ingredients-grid,
 .dishes-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
 }
 
-.category-placeholder,
-.ingredient-card,
-.dish-card {
+@media (min-width: 768px) {
+  .dishes-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.category-placeholder {
   background: white;
   border-radius: 12px;
   padding: 20px;
@@ -375,12 +379,165 @@ body {
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.ingredient-card:hover,
-.dish-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+/* Explore by Cuisine 카드 스타일 */
+.dish-card {
+  position: relative;
+  height: 220px;
+  border-radius: 16px;
+  overflow: hidden;
   cursor: pointer;
+  transition: transform 0.3s ease;
 }
+
+.dish-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.dish-card:hover img {
+  transform: scale(1.1);
+}
+
+.dish-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.7),
+    rgba(0, 0, 0, 0.2),
+    transparent
+  );
+  transition: background 0.3s ease;
+}
+
+.dish-card:hover .dish-overlay {
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.8),
+    rgba(0, 0, 0, 0.3),
+    transparent
+  );
+}
+
+.dish-content {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  color: white;
+  z-index: 1;
+}
+
+.dish-content .flag {
+  display: block;
+  font-size: 24px;
+  margin-bottom: 4px;
+}
+
+.dish-content .label {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Popular Ingredients 카드 스타일 */
+.ingredient-card {
+  background: white;
+  border-radius: 16px;
+  padding: 30px 24px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  text-align: left;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+.ingredient-card:first-child {
+  background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%);
+  color: white;
+}
+
+.ingredient-card:first-child .ingredient-icon,
+.ingredient-card:first-child .ingredient-title,
+.ingredient-card:first-child .ingredient-description,
+.ingredient-card:first-child .ingredient-explore-btn {
+  color: white;
+}
+
+.ingredient-card:first-child .ingredient-icon {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.ingredient-card:first-child .ingredient-explore-btn {
+  background: white;
+  color: #ff6b35;
+}
+
+.ingredient-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.ingredient-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: #fff4ed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  margin-bottom: 4px;
+}
+
+.ingredient-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+.ingredient-description {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.ingredient-explore-btn {
+  margin-top: auto;
+  padding: 10px 20px;
+  background: transparent;
+  border: none;
+  color: #ff6b35;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: gap 0.3s ease;
+}
+
+.ingredient-explore-btn:hover {
+  gap: 12px;
+}
+
+.ingredient-explore-btn .arrow {
+  font-size: 16px;
+  transition: transform 0.3s ease;
+}
+
+.ingredient-card:hover .ingredient-explore-btn .arrow {
+  transform: translateX(4px);
+}
+
+
 
 /* 로그인 카드 (기존) */
 .container {
