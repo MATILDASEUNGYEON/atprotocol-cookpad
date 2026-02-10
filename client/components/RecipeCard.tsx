@@ -16,13 +16,11 @@ export function RecipeCard({ recipe }: { recipe: RecipeListItem }) {
   return (
     <article className="recipe-card" onClick={handleClick}>
       <div className="recipe-image">
-        <Image 
-          src={recipe.thumbnail_url || '/placeholder-recipe.jpg'} 
-          alt={recipe.title} 
-          width={400} 
-          height={200}
-          priority
-        />
+        {recipe.thumbnail_url ? (
+          <img src={recipe.thumbnail_url} alt={recipe.title} />
+        ) : (
+          <div className="no-image">🍳</div>
+        )}
       </div>
       <div className="recipe-info">
         <h3 className="recipe-title">{recipe.title}</h3>
