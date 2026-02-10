@@ -3,7 +3,6 @@
 import { FilterPanelProps, COUNTRIES } from '@/types/filter'
 import CountryFilter from './CountryFilter'
 import IngredientsFilter from './IngredientsFilter'
-import PremiumFilters from './PremiumFilters'
 
 
 export default function FilterPanel({ filters, onFilterChange }: FilterPanelProps) {
@@ -46,20 +45,6 @@ export default function FilterPanel({ filters, onFilterChange }: FilterPanelProp
     })
   }
 
-  const handlePhotosInStepsChange = (value: boolean) => {
-    onFilterChange({
-      ...filters,
-      photosInSteps: value
-    })
-  }
-
-  const handleWithCooksnapsChange = (value: boolean) => {
-    onFilterChange({
-      ...filters,
-      withCooksnaps: value
-    })
-  }
-
   const handleReset = () => {
     onFilterChange({
       selectedCountry: 'US',
@@ -92,13 +77,6 @@ export default function FilterPanel({ filters, onFilterChange }: FilterPanelProp
         onExcludeAdd={handleExcludeAdd}
         onIncludeRemove={handleIncludeRemove}
         onExcludeRemove={handleExcludeRemove}
-      />
-
-      <PremiumFilters
-        photosInSteps={filters.photosInSteps}
-        withCooksnaps={filters.withCooksnaps}
-        onPhotosInStepsChange={handlePhotosInStepsChange}
-        onWithCooksnapsChange={handleWithCooksnapsChange}
       />
     </div>
   )

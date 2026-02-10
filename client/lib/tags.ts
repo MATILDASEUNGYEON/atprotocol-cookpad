@@ -38,11 +38,7 @@ export function generateTags(
     { pattern: /(김치|된장|고추장|간장|한식|korean|bibimbap|bulgogi|kimchi|doenjang|gochujang)/i, tag: 'korean' },
     { pattern: /(pasta|pizza|risotto|italian|parmesan|mozzarella)/i, tag: 'italian' },
     { pattern: /(sushi|ramen|tempura|japanese|miso|teriyaki|sake)/i, tag: 'japanese' },
-    { pattern: /(curry|indian|masala|tandoori|naan|biryani)/i, tag: 'indian' },
-    { pattern: /(taco|burrito|mexican|salsa|tortilla|enchilada)/i, tag: 'mexican' },
-    { pattern: /(croissant|french|baguette|crepe|quiche)/i, tag: 'french' },
-    { pattern: /(stir[- ]?fry|chinese|wok|dumpling|dim sum)/i, tag: 'chinese' },
-    { pattern: /(pad thai|thai|tom yum|green curry)/i, tag: 'thai' },
+    { pattern: /(taco|burrito|mexican|salsa|tortilla|enchilada)/i, tag: 'mexican' }
   ]
   
   cuisinePatterns.forEach(({ pattern, tag }) => {

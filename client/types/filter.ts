@@ -50,13 +50,6 @@ export interface IngredientsFilterProps {
   onExcludeRemove: (ingredient: string) => void
 }
 
-export interface PremiumFiltersProps {
-  photosInSteps: boolean
-  withCooksnaps: boolean
-  onPhotosInStepsChange: (value: boolean) => void
-  onWithCooksnapsChange: (value: boolean) => void
-}
-
 export interface SearchHeaderProps {
   category: string
   totalCount: number

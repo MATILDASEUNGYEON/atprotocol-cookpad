@@ -43,20 +43,6 @@ export default function SearchHeader({
         </div>
       )}
 
-      <div className="country-tags">
-        <span className="tag-label">From</span>
-        <div className="country-tag-list">
-          <button className="country-tag active">🇺🇸 United States</button>
-          <button className="country-tag">🇮🇹 Italy</button>
-          <button className="country-tag">🇯🇵 Japan</button>
-          <button className="country-tag">🇬🇷 Greece</button>
-          <button className="country-tag">🇹🇼 Taiwan</button>
-          <button className="country-tag">🇪🇸 Spain</button>
-          <button className="country-tag">🇻🇳 Vietnam</button>
-          <button className="country-tag">🇮🇳 India</button>
-        </div>
-      </div>
-
       <div className="sort-tabs">
         <button 
           className={`tab ${activeTab === 'new' ? 'active' : ''}`}

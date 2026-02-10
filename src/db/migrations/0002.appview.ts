@@ -1,11 +1,5 @@
 import { Kysely } from 'kysely'
 
-/**
- * AppView용 Recipe 인덱스 테이블 생성
- * 
- * Firehose consumer가 PDS의 recipe record를 감지하여
- * 이 테이블에 인덱싱함 (검색/리스트 뷰용)
- */
 export async function up(db: Kysely<any>): Promise<void> {
   await db.schema
     .createTable('recipe')
